@@ -7,6 +7,7 @@
 
 <svelte:head>
 	<link rel="icon" href={favicon} />
+	<title>Chaotic Chickens</title>
 </svelte:head>
 
 {@render children?.()}
