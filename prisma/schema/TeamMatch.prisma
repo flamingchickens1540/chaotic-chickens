@@ -1,0 +1,50 @@
+model TeamMatch {
+  id_num                              Int          @id @default(autoincrement())
+  match_key                           String
+  team                                Team         @relation(fields: [team_key], references: [key])
+  team_key                            Int
+  TeleActions                         TeleActionData[]
+  AutoActions                         AutoActionData[]
+  center_auto                         Boolean?
+  auto_mobility                       Boolean?
+  auto_score_grass                    Int?
+  auto_score_feeding_station          Int?
+  tele_score_grass                    Int?
+  tele_score_feeding_station          Int?
+  tele_score_robot                    Int?
+  skill                               Int?
+  notes                               String?
+  incap_time                          Int?
+  scoutId                             Int?
+  scout                               User?         @relation(fields: [scoutId], references: [id])
+
+  @@unique(name: "id_key", fields: [match_key, team_key])
+}
+
+model TeleActionData {
+  id         Int         @id @default(autoincrement())
+  action     TeleAction
+  success    Boolean
+  team_match TeamMatch[]
+}
+
+model AutoActionData {
+  id         Int         @id @default(autoincrement())
+  action     AutoAction
+  success    Boolean
+  team_match TeamMatch[]
+}
+
+
+enum TeleAction {
+  ScoreGrass
+  ScoreFeedingStation
+  ScoreRobot
+  Incap
+}
+
+enum AutoAction {
+  ScoreGrass
+  ScoreFeedingStation
+  Incap
+}

@@ -1,0 +1,26 @@
+model Team {
+  key                 Int         @unique
+  name                String
+  team_matches        TeamMatch[]
+  summary             String      @default("")
+  scoreRobot          Boolean?
+  scoreGrass          Boolean?
+  scoreFeedingStation Boolean?
+  scoreCabbage        Boolean?
+  leftAutos           Auto[]
+  centerAutos         Auto[]
+  rightAutos          Auto[]
+  drivetrain          Drivetrain?
+}
+
+model Auto {
+  mobility            Boolean
+  scoreGrass          Int
+  scoreFeedingStation Int
+}
+
+enum Drivetrain {
+  Swerve
+  Tank
+  Other
+}
