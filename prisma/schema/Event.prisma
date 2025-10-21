@@ -1,5 +1,5 @@
 model Event {
-  // id              Int    @id @default(autoincrement())
+  id              Int    @id @default(autoincrement())
   stream_url      String
   next_match_key  Int?
   next_match_time Int?
