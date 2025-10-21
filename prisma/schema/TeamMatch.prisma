@@ -1,22 +1,24 @@
 model TeamMatch {
-  id_num                              Int          @id @default(autoincrement())
-  match_key                           Int
-  team                                Team         @relation(fields: [team_key], references: [key])
-  team_key                            Int
-  TeleActions                         TeleActionData[]
-  AutoActions                         AutoActionData[]
-  center_auto                         Boolean?
-  auto_mobility                       Boolean?
-  auto_score_grass                    Int?
-  auto_score_feeding_station          Int?
-  tele_score_grass                    Int?
-  tele_score_feeding_station          Int?
-  tele_score_robot                    Int?
-  skill                               Int?
-  notes                               String?
-  incap_time                          Int?
-  scoutId                             Int?
-  scout                               User?         @relation(fields: [scoutId], references: [id])
+  id_num                     Int              @id @default(autoincrement())
+  match_key                  Int
+  team                       Team             @relation(fields: [team_key], references: [key])
+  team_key                   Int
+  TeleActions                TeleActionData[]
+  AutoActions                AutoActionData[]
+  center_auto                Boolean?
+  auto_mobility              Boolean?
+  auto_score_grass           Int?
+  auto_score_feeding_station Int?
+  tele_score_grass           Int?
+  tele_score_feeding_station Int?
+  tele_score_robot           Int?
+  skill                      Int?
+  notes                      String?
+  incap_time                 Int?
+  scoutId                    Int?
+  scout                      User?            @relation(fields: [scoutId], references: [id])
+  Event                      Event?           @relation(fields: [eventId], references: [id])
+  eventId                    Int?
 
   @@unique(name: "id_key", fields: [match_key, team_key])
 }
@@ -34,7 +36,6 @@ model AutoActionData {
   success    Boolean
   team_match TeamMatch[]
 }
-
 
 enum TeleAction {
   ScoreGrass

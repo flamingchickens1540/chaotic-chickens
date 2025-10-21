@@ -7,16 +7,21 @@ model Team {
   scoreGrass          Boolean?
   scoreFeedingStation Boolean?
   scoreCabbage        Boolean?
-  leftAutos           Auto[]
-  centerAutos         Auto[]
+  // leftAutos           Auto[]
+  // centerAutos         Auto[]
   rightAutos          Auto[]
   drivetrain          Drivetrain?
+  Event               Event?      @relation(fields: [eventId], references: [id])
+  eventId             Int?
 }
 
 model Auto {
+  id                  Int     @id @default(autoincrement())
   mobility            Boolean
   scoreGrass          Int
   scoreFeedingStation Int
+  Team                Team?   @relation(fields: [teamKey], references: [key])
+  teamKey             Int?
 }
 
 enum Drivetrain {
