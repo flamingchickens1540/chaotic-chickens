@@ -2,7 +2,7 @@ model Team {
   key                 Int         @unique
   name                String
   team_matches        TeamMatch[]
-  summary             String      @default("")
+  summary             String?      
   scoreRobot          Boolean?
   scoreGrass          Boolean?
   scoreFeedingStation Boolean?

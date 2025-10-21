@@ -1,5 +1,5 @@
-import { PrismaClient, Event, TeamMatch, Team } from '@prisma/client';
 import { faker } from '@faker-js/faker';
+import { PrismaClient, Team } from '../src/generated/prisma/client';
 
 const prisma = new PrismaClient();
 
@@ -15,7 +15,7 @@ async function main() {
 async function seedEvent() {
 	await prisma.event.create({
 		data: {
-			event_key: 'https://www.youtube.com/flamingchickens1540'
+			stream_url: 'https://www.youtube.com/flamingchickens1540'
 		}
 	});
 }
@@ -49,7 +49,14 @@ async function seedTeams() {
 	for (let i = 1100; i <= 1116; i++) {
 		teams.push({
 			key: i,
-			name: faker.commerce.productName() + 's'
+			name: faker.commerce.productName() + 's',
+			summary: '',
+			scoreRobot: false,
+			scoreGrass: false,
+			scoreFeedingStation: false,
+			scoreCabbage: false,
+			drivetrain: 'Swerve',
+			eventId: null
 		});
 	}
 	return await prisma.team.createMany({ data: teams });
