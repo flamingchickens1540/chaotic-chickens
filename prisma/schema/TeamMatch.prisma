@@ -17,8 +17,6 @@ model TeamMatch {
   incap_time                 Int?
   scoutId                    Int?
   scout                      User?            @relation(fields: [scoutId], references: [id])
-  Event                      Event?           @relation(fields: [eventId], references: [id])
-  eventId                    Int?
 
   @@unique(name: "id_key", fields: [match_key, team_key])
 }

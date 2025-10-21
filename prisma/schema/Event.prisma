@@ -3,6 +3,4 @@ model Event {
   stream_url      String
   next_match_key  Int?
   next_match_time Int?
-  teams           Team[]
-  team_matches    TeamMatch[]
 }

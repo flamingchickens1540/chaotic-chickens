@@ -1,5 +1,5 @@
 import { faker } from '@faker-js/faker';
-import { PrismaClient, Team } from '../src/generated/prisma/client';
+import { PrismaClient, Team, TeamMatch, User } from '../src/generated/prisma/client';
 
 const prisma = new PrismaClient();
 
@@ -7,9 +7,7 @@ async function main() {
 	await clearDB();
 
 	await seedEvent();
-	await seedUsers();
 	await seedTeams();
-	// await seedTeamMatches();
 }
 
 async function seedEvent() {
@@ -20,43 +18,18 @@ async function seedEvent() {
 	});
 }
 
-async function seedUsers() {
-	// WARNING Seeding users causes unique key
-	// constrait bugs when creating new ones
-	//
-	// const users: User[] = []
-	// users.push({
-	//     id: 0,
-	//     username: "admin",
-	//     is_enabled: true,
-	//     is_admin: true,
-	// })
-	// for (let i = 1; i <= 9; i++) {
-	//     users.push({
-	//         id: i,
-	//         username: faker.person.firstName(),
-	//         is_enabled: faker.number.int(100) > 30,
-	//         is_admin: false,
-	//     })
-	// }
-	// await prisma.user.createMany({ data: users })
-	//
-	// return await prisma.user.findMany()
-}
-
 async function seedTeams() {
 	const teams: Team[] = [];
 	for (let i = 1100; i <= 1116; i++) {
 		teams.push({
 			key: i,
 			name: faker.commerce.productName() + 's',
-			summary: '',
-			scoreRobot: false,
-			scoreGrass: false,
-			scoreFeedingStation: false,
-			scoreCabbage: false,
-			drivetrain: 'Swerve',
-			eventId: null
+			summary: null,
+			scoreRobot: null,
+			scoreGrass: null,
+			scoreFeedingStation: null,
+			scoreCabbage: null,
+			drivetrain: null
 		});
 	}
 	return await prisma.team.createMany({ data: teams });

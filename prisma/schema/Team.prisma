@@ -11,8 +11,6 @@ model Team {
   // centerAutos         Auto[]
   rightAutos          Auto[]
   drivetrain          Drivetrain?
-  Event               Event?      @relation(fields: [eventId], references: [id])
-  eventId             Int?
 }
 
 model Auto {
