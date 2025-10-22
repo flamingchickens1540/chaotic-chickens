@@ -5,17 +5,7 @@ const prisma = new PrismaClient();
 
 async function main() {
 	await clearDB();
-
-	await seedEvent();
 	await seedTeams();
-}
-
-async function seedEvent() {
-	await prisma.event.create({
-		data: {
-			stream_url: 'https://www.youtube.com/flamingchickens1540'
-		}
-	});
 }
 
 async function seedTeams() {
@@ -39,7 +29,6 @@ async function clearDB() {
 	await prisma.user.deleteMany();
 	await prisma.teamMatch.deleteMany();
 	await prisma.team.deleteMany();
-	await prisma.event.deleteMany();
 }
 
 await main()

@@ -1,4 +1,0 @@
-model Event {
-  id           Int  @id @default(autoincrement())
-  nextMatchKey Int?
-}
