@@ -1,5 +1,5 @@
 model Team {
-  key                 Int         @unique
+  key                 String @unique
   name                String
   teamMatches         TeamMatch[]
   summary             String?
@@ -18,7 +18,7 @@ model Auto {
   scoreGrass          Int
   scoreFeedingStation Int
   team                Team?     @relation(fields: [teamKey], references: [key])
-  teamKey             Int?
+  teamKey             String?
 }
 
 enum AutoStart {

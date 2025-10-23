@@ -2,7 +2,7 @@ model TeamMatch {
   idNum                   Int      @id @default(autoincrement())
   matchKey                Int
   team                    Team     @relation(fields: [teamKey], references: [key])
-  teamKey                 Int
+  teamKey                 String
   teleActions             Action[]
   autoActions             Action[]
   centerAuto              Boolean
