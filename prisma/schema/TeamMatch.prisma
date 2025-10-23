@@ -1,0 +1,27 @@
+model TeamMatch {
+  idNum                   Int      @id @default(autoincrement())
+  matchKey                Int
+  team                    Team     @relation(fields: [teamKey], references: [key])
+  teamKey                 String
+  teleActions             Action[]
+  autoActions             Action[]
+  centerAuto              Boolean
+  autoMobility            Boolean
+  autoScoreGrass          Int
+  autoScoreFeedingStation Int
+  teleScoreGrass          Int
+  teleScoreFeedingStation Int
+  teleScoreRobot          Int
+  skill                   Int
+  notes                   String
+  scoutId                 Int
+  scout                   User     @relation(fields: [scoutId], references: [id])
+
+  @@unique(name: "idKey", fields: [matchKey, teamKey])
+}
+
+enum Action {
+  ScoreGrass
+  ScoreFeedingStation
+  ScoreRobot
+}
