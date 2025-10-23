@@ -9,7 +9,7 @@ CREATE TYPE "Action" AS ENUM ('ScoreGrass', 'ScoreFeedingStation', 'ScoreRobot')
 
 -- CreateTable
 CREATE TABLE "Team" (
-    "key" INTEGER NOT NULL,
+    "key" TEXT NOT NULL,
     "name" TEXT NOT NULL,
     "summary" TEXT,
     "scoreRobot" BOOLEAN,
@@ -26,7 +26,7 @@ CREATE TABLE "Auto" (
     "location" "AutoStart" NOT NULL,
     "scoreGrass" INTEGER NOT NULL,
     "scoreFeedingStation" INTEGER NOT NULL,
-    "teamKey" INTEGER,
+    "teamKey" TEXT,
 
     CONSTRAINT "Auto_pkey" PRIMARY KEY ("id")
 );
@@ -35,7 +35,7 @@ CREATE TABLE "Auto" (
 CREATE TABLE "TeamMatch" (
     "idNum" SERIAL NOT NULL,
     "matchKey" INTEGER NOT NULL,
-    "teamKey" INTEGER NOT NULL,
+    "teamKey" TEXT NOT NULL,
     "teleActions" "Action"[],
     "autoActions" "Action"[],
     "centerAuto" BOOLEAN NOT NULL,
