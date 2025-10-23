@@ -19,7 +19,7 @@ async function seedTeams() {
 		headers: {
 			'If-None-Match': 'ETag',
 			Accept: 'application/json',
-			'X-TBA-Auth-Key': process.env.API_KEY!
+			'X-TBA-Auth-Key': process.env.API_KEY ?? ''
 		}
 	});
 	if (!res.ok) {

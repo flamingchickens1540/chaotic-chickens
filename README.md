@@ -5,7 +5,8 @@
 ## Setup
 
 1. install and setup `postgresql`
-2. create `.env` file and add database url
+2. get an `API_KEY` from [theBlueAlliance](https://www.thebluealliance.com/account)
+3. create `.env` file and add database url and api key
 
 ```bash
 bun i
