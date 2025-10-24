@@ -16,3 +16,5 @@ export type FrontendTeamMatch = {
 };
 
 export type AutoStart = 'Close' | 'Mid' | 'Far';
+
+export type { Team as TeamData, Action } from '../generated/prisma/client';
