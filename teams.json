@@ -1,7 +1,23 @@
 [
 	{
 		"official_key": 9999,
-		"key": "1540B",
-		"name": "Flaming Chickens B"
+		"team": {
+			"key": "1540B",
+			"name": "Flaming Chickens B"
+		}
+	},
+	{
+		"official_key": 9998,
+		"team": {
+			"key": "2374B",
+			"name": "Jesuit Robotics B"
+		}
+	},
+	{
+		"official_key": 9997,
+		"team": {
+			"key": "3636B",
+			"name": "The Generals B"
+		}
 	}
 ]

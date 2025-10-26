@@ -35,10 +35,10 @@ async function seedTeams() {
 
 	const modified_teams = teams.map((team) => {
 		return (
-			(team_mappings.find((mapping) => mapping.official_key == team.team_number) as {
-				key: string;
-				name: string;
-			}) ?? { key: team.team_number.toString(), name: team.nickname }
+			team_mappings.find((mapping) => mapping.official_key == team.team_number)?.team ?? {
+				key: team.team_number.toString(),
+				name: team.nickname
+			}
 		);
 	});
 	return await prisma.team.createMany({ data: modified_teams });
