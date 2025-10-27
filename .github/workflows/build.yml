@@ -1,0 +1,38 @@
+name: Build
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  build:
+    name: Build Application
+    runs-on: ubuntu-latest
+    container: node:latest
+    services:
+      postgres:
+        image: postgres:latest
+        env:
+          POSTGRES_DB: postgres_db
+          POSTGRES_PASSWORD: 1234
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 3
+    env:
+      DATABASE_URL: postgres://postgres:1234@postgres:5432/postgres_db?schema=public
+      API_KEY: ${{ secrets.API_KEY }}
+    steps:
+      - uses: actions/checkout@v3
+      - uses: oven-sh/setup-bun@v2
+      - name: Install Packages
+        run: bun install
+      - name: Prisma Generate
+        run: bunx prisma generate
+      - name: Prisma Migrate
+        run: bunx prisma migrate deploy && bunx prisma db seed
+      - name: Build
+        run: bun run build
