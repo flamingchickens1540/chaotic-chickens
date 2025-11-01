@@ -16,6 +16,13 @@ export const POST: RequestHandler = async ({ request }: any) => {
 		centerAuto: match.autoStart == 'Mid',
 		teleActions: match.timeline.tele,
 		autoActions: match.timeline.auto,
+		scoutName:
+			(
+				await prisma.user.findUnique({
+					where: { id: match.scoutId },
+					select: { username: true }
+				})
+			)?.username ?? 'Invalid',
 		...match
 	};
 	const res = await prisma.teamMatch.create({ data: counted });
