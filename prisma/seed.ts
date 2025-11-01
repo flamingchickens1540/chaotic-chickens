@@ -44,15 +44,32 @@ async function seedTeams() {
 
 	const mappings = (await resEvent.json()).remap_teams;
 
-	const teams: { team_number: number; nickname: string }[] = await resTeams.json();
+	const teams: { nickname: string; key: string }[] = await resTeams.json();
 	if (!teams.length) {
 		info(`Teams for event 2025orbb are not yet available. Generating fake data instead`);
 		return await seedFakeTeams();
 	}
 
 	const modified_teams = teams.map((team) => {
+		const remapped_key: string | undefined = mappings[team.key];
+		if (remapped_key) {
+			const name: string | undefined =
+				teams.find((team) => team.key == remapped_key.slice(0, remapped_key.length - 1))?.nickname +
+				' B';
+			if (!name) {
+				warn(`secondary team found without their primary team: ${remapped_key}`);
+				return {
+					key: team.key.slice(3),
+					name: team.nickname
+				};
+			}
+			return {
+				key: remapped_key.slice(3),
+				name
+			};
+		}
 		return {
-			key: (mappings[team.team_number] as string | undefined) ?? team.team_number.toString(),
+			key: team.key.slice(3),
 			name: team.nickname
 		};
 	});
@@ -64,7 +81,7 @@ async function seedFakeTeams() {
 
 	for (let i = 1100; i <= 1116; i++) {
 		teams.push({
-			key: i.toString(),
+			key: 'frc' + i.toString(),
 			name: faker.commerce.productName() + 's'
 		});
 	}
