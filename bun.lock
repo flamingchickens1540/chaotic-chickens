@@ -7,14 +7,15 @@
         "@faker-js/faker": "^10.1.0",
         "@prisma/client": "^6.18.0",
         "@prisma/extension-accelerate": "^2.0.2",
-        "prisma": "^6.17.1",
+        "lucide-svelte": "^0.552.0",
+        "prisma": "^6.18.0",
         "tsx": "^4.20.6",
       },
       "devDependencies": {
         "@eslint/compat": "^1.4.0",
         "@eslint/js": "^9.38.0",
         "@sveltejs/adapter-auto": "^6.1.1",
-        "@sveltejs/kit": "^2.47.2",
+        "@sveltejs/kit": "^2.47.3",
         "@sveltejs/vite-plugin-svelte": "^6.2.1",
         "@tailwindcss/vite": "^4.1.15",
         "@types/node": "^22.18.12",
@@ -25,7 +26,7 @@
         "prettier": "^3.6.2",
         "prettier-plugin-svelte": "^3.4.0",
         "prettier-plugin-tailwindcss": "^0.6.14",
-        "svelte": "^5.41.1",
+        "svelte": "^5.41.2",
         "svelte-check": "^4.3.3",
         "tailwindcss": "^4.1.15",
         "typescript": "^5.9.3",
@@ -472,6 +473,8 @@
     "locate-path": ["locate-path@6.0.0", "", { "dependencies": { "p-locate": "^5.0.0" } }, "sha512-iPZK6eYjbxRu3uB4/WZ3EsEIMJFMqAoopl3R+zuq0UjcAm/MO6KCweDgPfP3elTztoKP3KtnVHxTn2NHBSDVUw=="],
 
     "lodash.merge": ["lodash.merge@4.6.2", "", {}, "sha512-0KpjqXRVvrYyCsX1swR/XTK0va6VQkQM6MNo7PqW77ByjAhoARA8EfrP1N4+KlKj8YS0ZUCtRT/YUuhyYDujIQ=="],
+
+    "lucide-svelte": ["lucide-svelte@0.552.0", "", { "peerDependencies": { "svelte": "^3 || ^4 || ^5.0.0-next.42" } }, "sha512-zynJ64KOsuQG3I4tSqfvvl7Kc9x4mWkppbxsuyrbegQwma9HFhBp4aE6HuQNF4c3pS0AHWHki5CAMs5m3QXA5w=="],
 
     "magic-string": ["magic-string@0.30.19", "", { "dependencies": { "@jridgewell/sourcemap-codec": "^1.5.5" } }, "sha512-2N21sPY9Ws53PZvsEpVtNuSW+ScYbQdp4b9qUaL+9QkHUrGFKo56Lg9Emg5s9V/qrtNBmiR01sYhUOwu3H+VOw=="],
 
