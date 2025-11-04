@@ -1,7 +1,8 @@
 import type { Action } from '../generated/prisma/client';
 
 export type FrontendTeamMatch = {
-	matchKey: number;
+	matchKey: string;
+	eventKey: string;
 	teamKey: string;
 	timeline: {
 		auto: Action[];

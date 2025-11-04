@@ -1,6 +1,7 @@
 model TeamMatch {
     idNum                   Int      @id @default(autoincrement())
-    matchKey                Int
+    eventKey                String   @default("2025orbb")
+    matchKey                String
     team                    Team     @relation(fields: [teamKey], references: [key])
     teamKey                 String
     teleActions             Action[]
@@ -12,6 +13,7 @@ model TeamMatch {
     teleScoreGrass          Int
     teleScoreFeedingStation Int
     teleScoreRobot          Int
+    teleScoreBunny          Int
     skill                   Int
     notes                   String
     scoutName               String

@@ -34,7 +34,8 @@ CREATE TABLE "Auto" (
 -- CreateTable
 CREATE TABLE "TeamMatch" (
     "idNum" SERIAL NOT NULL,
-    "matchKey" INTEGER NOT NULL,
+    "eventKey" TEXT NOT NULL DEFAULT '2025orbb',
+    "matchKey" TEXT NOT NULL,
     "teamKey" TEXT NOT NULL,
     "teleActions" "Action"[],
     "autoActions" "Action"[],
@@ -45,8 +46,10 @@ CREATE TABLE "TeamMatch" (
     "teleScoreGrass" INTEGER NOT NULL,
     "teleScoreFeedingStation" INTEGER NOT NULL,
     "teleScoreRobot" INTEGER NOT NULL,
+    "teleScoreBunny" INTEGER NOT NULL,
     "skill" INTEGER NOT NULL,
     "notes" TEXT NOT NULL,
+    "scoutName" TEXT NOT NULL,
     "scoutId" INTEGER NOT NULL,
 
     CONSTRAINT "TeamMatch_pkey" PRIMARY KEY ("idNum")
@@ -56,7 +59,6 @@ CREATE TABLE "TeamMatch" (
 CREATE TABLE "User" (
     "id" SERIAL NOT NULL,
     "username" TEXT NOT NULL,
-    "isAdmin" BOOLEAN NOT NULL DEFAULT false,
 
     CONSTRAINT "User_pkey" PRIMARY KEY ("id")
 );

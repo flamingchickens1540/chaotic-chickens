@@ -2,7 +2,6 @@ import { faker } from '@faker-js/faker';
 import { PrismaClient, Team, TeamMatch, User } from '../src/generated/prisma/client';
 import { info, warn } from 'console';
 
-import team_mappings from '../teams.json';
 import dotenv from 'dotenv';
 
 dotenv.config();
@@ -89,8 +88,8 @@ async function seedFakeTeams() {
 }
 
 async function clearDB() {
-	await prisma.user.deleteMany();
 	await prisma.teamMatch.deleteMany();
+	await prisma.user.deleteMany();
 	await prisma.team.deleteMany();
 }
 
