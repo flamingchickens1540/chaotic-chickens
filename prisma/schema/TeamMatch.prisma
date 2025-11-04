@@ -27,4 +27,5 @@ enum Action {
     ScoreGrass
     ScoreFeedingStation
     ScoreRobot
+    ScoreBunny
 }
