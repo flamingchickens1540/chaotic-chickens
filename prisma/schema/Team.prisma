@@ -1,34 +1,35 @@
 model Team {
-  key                 String @unique
-  name                String
-  teamMatches         TeamMatch[]
-  summary             String?
-  scoreRobot          Boolean?
-  scoreGrass          Boolean?
-  scoreFeedingStation Boolean?
-  scoreCabbage        Boolean?
-  autos               Auto[]
-  drivetrain          Drivetrain?
+    key                 String      @unique
+    name                String
+    teamMatches         TeamMatch[]
+    summary             String?
+    scoreRobot          Boolean?
+    scoreGrass          Boolean?
+    scoreFeedingStation Boolean?
+    scoreBunny          Boolean?
+    scoreCabbage        Boolean?
+    autos               Auto[]
+    drivetrain          Drivetrain?
 }
 
 model Auto {
-  id                  Int       @id @default(autoincrement())
-  mobility            Boolean
-  location            AutoStart
-  scoreGrass          Int
-  scoreFeedingStation Int
-  team                Team?     @relation(fields: [teamKey], references: [key])
-  teamKey             String?
+    id                  Int       @id @default(autoincrement())
+    mobility            Boolean
+    location            AutoStart
+    scoreGrass          Int
+    scoreFeedingStation Int
+    team                Team?     @relation(fields: [teamKey], references: [key])
+    teamKey             String?
 }
 
 enum AutoStart {
-  Far
-  Close
-  Mid
+    Far
+    Close
+    Mid
 }
 
 enum Drivetrain {
-  Swerve
-  Tank
-  Other
+    Swerve
+    Tank
+    Other
 }

@@ -1,0 +1,21 @@
+name: Check Nix
+
+on:
+  pull_request:
+    paths:
+      - 'flake.*'
+  push:
+    paths:
+      - 'flake.*'
+
+jobs:
+  nix-check:
+    name: Check Nix Dev Shell
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Nix
+        uses: DeterminateSystems/nix-installer-action@v12
+      - name: Check
+        run: nix flake check -L

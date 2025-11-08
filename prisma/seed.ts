@@ -2,7 +2,6 @@ import { faker } from '@faker-js/faker';
 import { PrismaClient, Team, TeamMatch, User } from '../src/generated/prisma/client';
 import { info, warn } from 'console';
 
-import team_mappings from '../teams.json';
 import dotenv from 'dotenv';
 
 dotenv.config();
@@ -14,7 +13,7 @@ async function main() {
 }
 
 async function seedTeams() {
-	const res = await fetch(`https://www.thebluealliance.com/api/v3/event/2025orbb/teams/simple`, {
+	const resEvent = await fetch(`https://www.thebluealliance.com/api/v3/event/2025orbb`, {
 		method: 'GET',
 		headers: {
 			'If-None-Match': 'ETag',
@@ -22,24 +21,56 @@ async function seedTeams() {
 			'X-TBA-Auth-Key': process.env.API_KEY ?? ''
 		}
 	});
-	if (!res.ok) {
-		warn(`Error finding teams for event 2025orbb: ${res.status}`);
+	const resTeams = await fetch(
+		`https://www.thebluealliance.com/api/v3/event/2025orbb/teams/simple`,
+		{
+			method: 'GET',
+			headers: {
+				'If-None-Match': 'ETag',
+				Accept: 'application/json',
+				'X-TBA-Auth-Key': process.env.API_KEY ?? ''
+			}
+		}
+	);
+	if (!resEvent.ok) {
+		warn(`Error finding event 2025orbb: ${resEvent.status}`);
+		return await seedFakeTeams();
+	}
+	if (!resTeams.ok) {
+		warn(`Error finding teams for event 2025orbb: ${resTeams.status}`);
 		return await seedFakeTeams();
 	}
 
-	const teams: { team_number: number; nickname: string }[] = await res.json();
+	const mappings = (await resEvent.json()).remap_teams;
+
+	const teams: { nickname: string; key: string }[] = await resTeams.json();
 	if (!teams.length) {
 		info(`Teams for event 2025orbb are not yet available. Generating fake data instead`);
 		return await seedFakeTeams();
 	}
 
 	const modified_teams = teams.map((team) => {
-		return (
-			(team_mappings.find((mapping) => mapping.official_key == team.team_number) as {
-				key: string;
-				name: string;
-			}) ?? { key: team.team_number.toString(), name: team.nickname }
-		);
+		const remapped_key: string | undefined = mappings[team.key];
+		if (!remapped_key) {
+			return {
+				key: team.key.slice(3),
+				name: team.nickname
+			};
+		}
+		const name: string | undefined =
+			teams.find((team) => team.key == remapped_key.slice(0, remapped_key.length - 1))?.nickname +
+			' B';
+		if (!name) {
+			warn(`secondary team found without their primary team: ${remapped_key}`);
+			return {
+				key: team.key.slice(3),
+				name: team.nickname
+			};
+		}
+		return {
+			key: remapped_key.slice(3),
+			name
+		};
 	});
 	return await prisma.team.createMany({ data: modified_teams });
 }
@@ -49,7 +80,7 @@ async function seedFakeTeams() {
 
 	for (let i = 1100; i <= 1116; i++) {
 		teams.push({
-			key: i.toString(),
+			key: 'frc' + i.toString(),
 			name: faker.commerce.productName() + 's'
 		});
 	}
@@ -57,8 +88,8 @@ async function seedFakeTeams() {
 }
 
 async function clearDB() {
-	await prisma.user.deleteMany();
 	await prisma.teamMatch.deleteMany();
+	await prisma.user.deleteMany();
 	await prisma.team.deleteMany();
 }
 
