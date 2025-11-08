@@ -1,5 +1,19 @@
 @import 'tailwindcss';
 
 body {
-	@apply bg-slate-950 text-white accent-orange-400;
+	@apply bg-eerie-black text-white accent-xanthous;
+}
+
+@theme {
+	--color-white: #ffffff;
+	--color-eerie-black: #1c1c1c;
+	--color-xanthous: #f6b14b;
+	--color-imperial-red: #ff4848;
+	--color-crayola-orange: #ff8547;
+	--color-steel-blue: #3581b8;
+	--color-bittersweet: #ff6663;
+	--color-gunmetal: #20282c;
+	--color-indigo-dye: #294f6a;
+	--color-eminence: #6c3082;
+	--color-jungle-green: '#49A078';
 }
