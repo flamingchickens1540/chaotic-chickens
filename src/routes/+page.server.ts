@@ -8,15 +8,13 @@ export const load: PageServerLoad = async ({ cookies }: any) => {
 		throw redirect(307, '/login');
 	}
 
-	const user: { id: number; username: string; isAdmin: boolean } | null =
-		await prisma.user.findUnique({
-			where: { id },
-			select: {
-				id: true,
-				username: true,
-				isAdmin: true
-			}
-		});
+	const user: { id: number; username: string } | null = await prisma.user.findUnique({
+		where: { id },
+		select: {
+			id: true,
+			username: true
+		}
+	});
 
 	if (user == null) {
 		cookies.set('id', undefined, { path: '/' });

@@ -13,6 +13,7 @@ export const POST: RequestHandler = async ({ request }: any) => {
 		teleScoreFeedingStation: match.timeline.tele.filter((action) => action == 'ScoreFeedingStation')
 			.length,
 		teleScoreRobot: match.timeline.tele.filter((action) => action == 'ScoreRobot').length,
+		teleScoreBunny: match.timeline.tele.filter((action) => action == 'ScoreBunny').length,
 		centerAuto: match.autoStart == 'Mid',
 		teleActions: match.timeline.tele,
 		autoActions: match.timeline.auto,
