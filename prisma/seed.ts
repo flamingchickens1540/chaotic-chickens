@@ -51,25 +51,25 @@ async function seedTeams() {
 
 	const modified_teams = teams.map((team) => {
 		const remapped_key: string | undefined = mappings[team.key];
-		if (remapped_key) {
-			const name: string | undefined =
-				teams.find((team) => team.key == remapped_key.slice(0, remapped_key.length - 1))?.nickname +
-				' B';
-			if (!name) {
-				warn(`secondary team found without their primary team: ${remapped_key}`);
-				return {
-					key: team.key.slice(3),
-					name: team.nickname
-				};
-			}
+		if (!remapped_key) {
 			return {
-				key: remapped_key.slice(3),
-				name
+				key: team.key.slice(3),
+				name: team.nickname
+			};
+		}
+		const name: string | undefined =
+			teams.find((team) => team.key == remapped_key.slice(0, remapped_key.length - 1))?.nickname +
+			' B';
+		if (!name) {
+			warn(`secondary team found without their primary team: ${remapped_key}`);
+			return {
+				key: team.key.slice(3),
+				name: team.nickname
 			};
 		}
 		return {
-			key: team.key.slice(3),
-			name: team.nickname
+			key: remapped_key.slice(3),
+			name
 		};
 	});
 	return await prisma.team.createMany({ data: modified_teams });
