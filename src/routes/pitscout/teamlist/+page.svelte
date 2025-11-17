@@ -1,0 +1,41 @@
+<script lang="ts">
+    import { ClipboardList, Home } from "lucide-svelte"
+    import { Camera } from "lucide-svelte"
+
+    import { goto } from "$app/navigation"
+    import type { PageProps } from "./$types"
+
+    let { data }: PageProps = $props()
+</script>
+
+<header
+    class="font-heading flex flex-row items-center justify-between border-b-2 border-white/10 p-2 text-lg font-semibold"
+>
+    <button class="rounded bg-gunmetal p-2" onclick={() => goto("/home")}
+        ><Home /></button
+    >
+    <span class="flex-1 text-center">Manual Scouting</span>
+</header>
+
+<div class="flex flex-col gap-1 p-2">
+    {#each data.teams as team}
+        <div
+            class="flex w-full flex-row items-center justify-between rounded bg-gunmetal p-4 text-xl"
+        >
+            <span>{team.key}</span>
+            <div class="flex flex-row gap-4">
+                <button
+                    class="flex items-center space-x-2 px-1 py-1"
+                    onclick={() =>
+                        goto(`/pitscout/collect?team=${team.key}`)}
+                >
+                    <ClipboardList
+                        class="size-8 {team.data
+                            ? 'text-xanthous'
+                            : 'text-white'}"
+                    />
+                </button>
+            </div>
+        </div>
+    {/each}
+</div>
