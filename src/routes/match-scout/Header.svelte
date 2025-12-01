@@ -11,8 +11,8 @@
 		team_key: number;
 		game_stage: string;
 		color: string;
-		prev_page?: () => void;
-		next_page?: () => void;
+		prevPage?: () => void;
+		nextPage?: () => void;
 	} = $props();
 </script>
 
