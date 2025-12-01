@@ -33,7 +33,7 @@
 		phases[phases.length - 1] == currentPhase
 			? null
 			: () => {
-					phases[phases.indexOf(currentPhase) + 2];
+					phases[phases.indexOf(currentPhase) + 1];
 				};
 </script>
 
