@@ -10,4 +10,6 @@
 	<title>Chaotic Chickens</title>
 </svelte:head>
 
-{@render children?.()}
+<div class="m-auto max-w-2xl">
+	{@render children?.()}
+</div>

@@ -1,5 +1,12 @@
 <script lang="ts">
+	import { useSwipe, type SwipeCustomEvent } from 'svelte-gestures';
+	import { LocalStore, localStore } from '@/localStore.svelte';
+	import { type FrontendTeamMatch } from '@/types';
+
+	import GamePhase from './GamePhase.svelte';
 	import Header from './Header.svelte';
+	import Postmatch from './Postmatch.svelte';
+	import Prematch from './Prematch.svelte';
 	import Timeline from './Timeline.svelte';
 
 	let timelineDisplayed = $state(false);
@@ -7,72 +14,89 @@
 	let color = 'blue';
 	let team = 1540;
 
+	let match: FrontendTeamMatch = $state({
+		matchKey: 'fwejifj',
+		eventKey: 'feoiwf',
+		teamKey: '1540',
+		timeline: {
+			auto: [],
+			tele: []
+		},
+		autoStart: 'Close',
+		autoMobility: false,
+		skill: 3,
+		notes: '',
+		scoutId: 90128340812,
+		scout: 'daisy'
+	});
+
 	$effect(() => console.log(timelineDisplayed));
 
 	const feederStationPressed = (phase: string) => {};
 	const grassPressed = (phase: string) => {};
 	const opposingRobotPressed = (phase: string) => {};
 
-	const phases = ['pre', 'auto', 'tele', 'post'];
+	let game_stage: LocalStore<'Pre' | 'Auto' | 'Tele' | 'Post'> = $state(
+		localStore('game_stage', 'Pre')
+	);
 
-	let currentPhase = 'auto';
+	const nextGameStage = () => {
+		game_stage.value =
+			game_stage.value === 'Pre' ? 'Auto' : game_stage.value === 'Auto' ? 'Tele' : 'Post';
+	};
 
-	$effect(() => {
-		console.log(currentPhase);
-		console.log(prevPage);
-		console.log(nextPage);
-	});
+	const prevGameStage = () => {
+		game_stage.value =
+			game_stage.value === 'Post' ? 'Tele' : game_stage.value === 'Tele' ? 'Auto' : 'Pre';
+	};
 
-	let prevPage =
-		phases[0] == currentPhase
-			? null
-			: () => {
-					phases[phases.indexOf(currentPhase) - 1];
-				};
-	let nextPage =
-		phases[phases.length - 1] == currentPhase
-			? null
-			: () => {
-					phases[phases.indexOf(currentPhase) + 1];
-				};
+	function swipeHandler(event: SwipeCustomEvent) {
+		if ((event.detail.direction = 'left')) prevGameStage();
+		else if ((event.detail.direction = 'right')) nextGameStage();
+	}
 </script>
 
-<div class="flex h-dvh max-w-dvw flex-col justify-around gap-2 p-2">
-	<Header team_key={team} game_state="pre" {color} {prevPage} {nextPage} />
-	<div class="flex grow flex-row gap-8" onscroll={() => console.log('scrolled')}>
-		{#each ['auto', 'tele'] as phase}
-			{#if currentPhase == phase}
-				<div id={phase} class="flex min-w-[calc(100dvw-1rem)] flex-col gap-3">
-					<button
-						class="grow rounded-xl p-6 text-xl font-bold {phase == 'auto'
-							? 'bg-steel-blue'
-							: 'bg-eminence'}"
-						onclick={() => feederStationPressed(phase)}>Feeder Station</button
-					>
-					<button
-						class="grow rounded-xl p-6 text-xl font-bold {phase == 'auto'
-							? 'bg-steel-blue'
-							: 'bg-eminence'}"
-						onclick={() => grassPressed(phase)}>Grass</button
-					>
-					<button
-						class="grow rounded-xl p-6 text-xl font-bold {phase == 'auto'
-							? 'bg-steel-blue'
-							: 'bg-eminence'}"
-						onclick={() => opposingRobotPressed(phase)}>Opposing Robot</button
-					>
-				</div>
+<div
+	class="grid max-h-dvh min-h-dvh max-w-dvw grid-rows-[auto_1fr] gap-2 p-2"
+	{...useSwipe(swipeHandler, () => ({ timeframe: 300, minSwipeDistance: 60 }))}
+>
+	<Header
+		team_key={team}
+		game_stage={game_stage.value}
+		{color}
+		next={nextGameStage}
+		prev={prevGameStage}
+	/>
+	<div class="grid max-h-full grid-rows-[1fr_auto] gap-2 overflow-y-scroll">
+		{#if game_stage.value === 'Pre'}
+			<Prematch />
+		{:else if game_stage.value === 'Auto' || game_stage.value === 'Tele'}
+			<GamePhase
+				phase={game_stage.value}
+				feederStationClicked={() => {}}
+				grassClicked={() => {}}
+				opposingRobotClicked={() => {}}
+			/>
+		{:else if game_stage.value === 'Post'}
+			<Postmatch bind:match />
+		{/if}
+		<div class="flex flex-col gap-2">
+			{#if game_stage.value === 'Auto' || game_stage.value === 'Tele'}
+				<button
+					class="grow-0 rounded-lg bg-gunmetal p-4 text-xl font-semibold transition-transform duration-100 ease-in-out active:scale-95"
+				>
+					Undo <span class="text-xanthous">TODO</span>
+				</button>
 			{/if}
-		{/each}
+			{#if game_stage.value == 'Auto' || game_stage.value === 'Tele' || game_stage.value === 'Post'}
+				<button
+					class="grow-0 rounded-lg bg-gunmetal p-4 text-xl font-semibold transition-transform duration-150 active:scale-95"
+					onclick={() => (timelineDisplayed = true)}
+				>
+					Timeline
+				</button>
+			{/if}
+		</div>
 	</div>
-	<button class="rounded bg-gunmetal p-4 text-xl font-semibold">
-		Undo <span class="text-imperial-red">TODO</span>
-	</button>
-	<button
-		class="rounded bg-gunmetal p-4 text-xl font-semibold"
-		onclick={() => (timelineDisplayed = true)}
-	>
-		Timeline
-	</button>
-	<Timeline bind:displaying={timelineDisplayed} />
 </div>
+<Timeline bind:displaying={timelineDisplayed} />

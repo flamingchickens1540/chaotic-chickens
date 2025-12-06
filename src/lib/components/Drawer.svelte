@@ -4,7 +4,6 @@
 	let {
 		children,
 		displaying = $bindable(),
-		bg = 'bg-eerie-black',
 		gap = 'gap-2',
 		p = 'p-2',
 		text = 'text-white',
@@ -14,7 +13,6 @@
 	}: {
 		children?: Snippet<[]>;
 		displaying: boolean;
-		bg?: string;
 		gap?: string;
 		p?: string;
 		text?: string;
@@ -26,7 +24,7 @@
 
 <div
 	class="fixed inset-0 transition-all will-change-transform {displaying
-		? 'backdrop-blur'
+		? 'backdrop-blur-lg'
 		: 'translate-y-full'}"
 	onclick={(e: Event) => {
 		if (e.target === e.currentTarget) displaying = false;
@@ -35,12 +33,12 @@
 	<div
 		class="{!scrollbar
 			? 'no-scrollbar'
-			: ''} absolute inset-x-0 bottom-0 flex {min_h} {max_h} w-dvw flex-col items-center {gap} overflow-y-scroll rounded-t-lg {bg} {p} {text}"
+			: ''} absolute inset-x-0 bottom-0 flex shadow-eminence/10 {min_h} {max_h} m-auto w-dvw max-w-xl flex-col items-center {gap} overflow-y-scroll rounded-t-lg bg-gunmetal {p} {text}"
 	>
 		{#if children}
 			{@render children()}
 		{:else}
-			<p class="m-auto">Nothing here :3</p>
+			<span class="m-auto text-xl font-semibold">Nothing here :3</span>
 		{/if}
 	</div>
 </div>
