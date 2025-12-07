@@ -27,52 +27,58 @@
 
 
 
-    function remove_scout(i: number) {
+    const remove_scout = (i: number) => {
         scout_queue.splice(i, 1)
+    }
+
+    const load_from_fowlfield = () => {}
+
+    const clear_next_match = () => {
+        next_match = []
     }
     
 </script>
 
 <div class="grid lg:grid-cols-3 grid-cols-1 gap-3 m-auto mt-3 w-sm lg:w-6xl">
     <div class="col-span-1 grid grid-rows-2 gap-3">
-        <div class="row-span-1 bg-slate-900 p-3 rounded">
+        <div class="row-span-1 bg-gunmetal p-3 rounded">
             Current Match
             <div class="grid grid-cols-3 gap-2 grid-rows-2 rounded mt-2">
                 {#each current_match as {team, color, status} }
-                    <div class="col-span-1 row-span-1 bg-slate-950 p-2 rounded {color == "red" ? "text-red-500" : "text-blue-500"} border {status == 0 ? "border-none" : "border-solid"} border-2 {status == 1 ? "border-orange-400" : "border-green-400"}">
+                    <div class="col-span-1 row-span-1 bg-eerie-black p-2 rounded {color == "red" ? "text-imperial-red" : "text-steel-blue"} border {status == 0 ? "border-none" : "border-solid"} border-2 {status == 1 ? "border-crayola-orange" : "border-jungle-green"}">
                         {team}
                     </div>
                 {/each}
             </div>
         </div>
-        <div class="row-span-1 bg-slate-900 p-3 rounded">
+        <div class="row-span-1 bg-gunmetal p-3 rounded">
             Next Match
             <div class="grid grid-cols-3 gap-2 grid-rows-2 rounded mt-2">
                 {#each next_match as {team, color, status} }
-                    <div class="col-span-1 row-span-1 bg-slate-950 p-2 rounded {color == "red" ? "text-red-500" : "text-blue-500"} border {status == 0 ? "border-none" : "border-solid"} border-2 {status == 1 ? "border-orange-400" : "border-green-400"}">
+                    <div class="col-span-1 row-span-1 bg-eerie-black p-2 rounded {color == "red" ? "text-imperial-red" : "text-steel-blue"} border {status == 0 ? "border-none" : "border-solid"} border-2 {status == 1 ? "border-crayola-orange" : "border-jungle-green"}">
                         {team}
                     </div>
                 {/each}
             </div>
         </div>
     </div>
-    <div class="col-span-1 bg-slate-900 rounded text-center p-3">
+    <div class="col-span-1 bg-gunmetal rounded text-center p-3">
         Queue
         {#if scout_queue.length > 0}
             {#each scout_queue as scout, i}
-                <div class="bg-slate-950 rounded mt-2 p-2 grid grid-cols-12 items-center">
-                    <button class="bg-slate-800 rounded col-span-1 py-1" onclick={() => remove_scout(i)}>×</button>
+                <div class="bg-eerie-black rounded mt-2 p-2 grid grid-cols-12 items-center">
+                    <button class="bg-gunmetal rounded col-span-1 py-1" onclick={() => remove_scout(i)}>×</button>
                     <span class="col-span-11">
                         {scout}
                     </span>
                 </div>
             {/each}
         {:else}
-            <div class="bg-slate-950 rounded mt-2 p-2">Queue is empty</div>
+            <div class="bg-eerie-black rounded mt-2 p-2">Queue is empty</div>
         {/if}
     </div>
-    <div class="col-span-1 bg-slate-900 rounded text-center p-3">
-        <button class="bg-slate-950 rounded p-1 w-full p-2 mb-2" onclick={() => console.log("PLACEHOLDER")}>Load from Fowlfield</button>
-        <button class="bg-slate-950 rounded p-1 w-full p-2" onclick={() => console.log("PLACEHOLDER")}>Clear Next Match</button>
+    <div class="col-span-1 bg-gunmetal rounded text-center p-3">
+        <button class="bg-eerie-black rounded w-full p-2 mb-2" onclick={() => console.log("PLACEHOLDER")}>Load from Fowlfield</button>
+        <button class="bg-eerie-black rounded w-full p-2" onclick={clear_next_match}>Clear Next Match</button>
     </div>
 </div>
