@@ -4,7 +4,7 @@
 	import Rate from '@/components/Rate.svelte';
 	import ToggleGroup from '@/components/ToggleGroup.svelte';
 
-	let { match }: { match: FrontEndMatch } = $props();
+	let { match = $bindable() }: { match: FrontEndMatch } = $props();
 </script>
 
 <div class="flex flex-col gap-4 overflow-y-scroll">
