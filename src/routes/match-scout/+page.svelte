@@ -50,8 +50,8 @@
 	};
 
 	function swipeHandler(event: SwipeCustomEvent) {
-		if ((event.detail.direction = 'left')) prevGameStage();
-		else if ((event.detail.direction = 'right')) nextGameStage();
+		if (event.detail.direction === 'left') prevGameStage();
+		else if (event.detail.direction === 'right') nextGameStage();
 	}
 </script>
 
