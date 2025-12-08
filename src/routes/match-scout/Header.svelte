@@ -17,7 +17,7 @@
 
 	const disabled = 'pointer-events-none opacity-30';
 	const can_next = $derived(game_stage === 'Post' ? disabled : '');
-	const can_prev = $derived(game_stage === 'Pre' ? disabled : '');
+	const can_prev = $derived(game_stage === 'Auto' ? disabled : '');
 </script>
 
 <header class="flex justify-between gap-1 border-b-1 border-white/10 p-2 text-xl font-bold">
