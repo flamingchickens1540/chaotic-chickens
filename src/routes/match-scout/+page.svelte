@@ -29,7 +29,7 @@
 		scout: 'daisy'
 	});
 
-	let mostRecentAction: 'Auto' | 'Tele' | null = null;
+	let mostRecentAction: 'Auto' | 'Tele' | null = $state(null);
 	let mostRecentTimeline = $derived(
 		mostRecentAction === 'Auto'
 			? match.timeline.auto

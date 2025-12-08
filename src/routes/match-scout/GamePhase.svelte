@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { type Action, type Timeline } from '@/lib/types';
+	import { type Action, type Timeline } from '@/types';
 
 	let {
 		phase,

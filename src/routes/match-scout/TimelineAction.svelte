@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { type Action } from '@/lib/types';
+	import { type Action } from '@/types';
 	import { X } from 'lucide-svelte';
 
 	let { phase, action, remove }: { phase: 'Auto' | 'Tele'; action: Action; remove: () => void } =

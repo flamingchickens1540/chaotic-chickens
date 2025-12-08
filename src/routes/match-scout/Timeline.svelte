@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { type Timeline } from '@/lib/types';
+	import { type Timeline } from '@/types';
 	import Drawer from '$lib/components/Drawer.svelte';
 	import TimelineAction from './TimelineAction.svelte';
 	import { MoveDown, MoveUp } from 'lucide-svelte';
