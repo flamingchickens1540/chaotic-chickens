@@ -3,8 +3,24 @@
 
 	import Rate from '@/components/Rate.svelte';
 	import ToggleGroup from '@/components/ToggleGroup.svelte';
+	import { goto } from '$app/navigation';
 
 	let { match = $bindable() }: { match: FrontendTeamMatch } = $props();
+
+	async function submit() {
+		const res = await fetch('/api/team-match', {
+			method: 'POST',
+			body: JSON.stringify(match)
+		});
+
+		if (res.status !== 200) {
+			alert('Failed to submit');
+			console.log('Failed to submit:', res);
+			return;
+		}
+
+		goto('/');
+	}
 </script>
 
 <div class="flex flex-col gap-4 overflow-y-scroll">
@@ -43,6 +59,7 @@
 
 	<button
 		class="mb-4 grow-0 rounded-lg bg-xanthous p-4 text-xl font-semibold transition-transform duration-100 ease-in-out active:scale-95"
+		onclick={submit}
 	>
 		Submit!
 	</button>
