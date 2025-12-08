@@ -5,8 +5,8 @@
 		selected = $bindable()
 	}: {
 		name: string;
-		items: string[];
-		selected: string;
+		items: (string | { display: string; value: any })[];
+		selected: any;
 	} = $props();
 </script>
 
@@ -18,11 +18,11 @@
 			<input
 				type="radio"
 				name="{name}-switcher"
-				value={item}
+				value={typeof item === 'string' ? item : item.value}
 				bind:group={selected}
 				class="hidden"
 			/>
-			<span>{item}</span>
+			<span>{typeof item === 'string' ? item : item.display}</span>
 		</label>
 	{/each}
 </div>

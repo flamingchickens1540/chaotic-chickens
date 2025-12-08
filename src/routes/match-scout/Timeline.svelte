@@ -40,7 +40,7 @@
 
 <Drawer bind:displaying>
 	{#each timeline.tele as action, i}
-		<TimelineAction phase="Tele" {action} remove={remove_tele(i)} />
+		<TimelineAction phase="Tele" {action} remove={() => remove_tele(i)} />
 	{/each}
 	{#if auto_len + tele_len > 0}
 		<div class="flex w-full items-center gap-8 rounded bg-gunmetal p-2">
@@ -54,6 +54,6 @@
 		</div>
 	{/if}
 	{#each timeline.auto as action, i}
-		<TimelineAction phase="Auto" {action} remove={remove_tele(i)} />
+		<TimelineAction phase="Auto" {action} remove={() => remove_auto(i)} />
 	{/each}
 </Drawer>

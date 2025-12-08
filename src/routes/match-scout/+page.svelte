@@ -75,7 +75,7 @@
 			{#if game_stage.value === 'Auto' || game_stage.value === 'Tele'}
 				<button
 					disabled={mostRecentTimeline === null}
-					onclick={() => mostRecentTimeline.pop()}
+					onclick={() => mostRecentTimeline?.pop()}
 					class="pointer-events-none grow-0 rounded-lg bg-gunmetal p-4 text-xl font-semibold transition-transform duration-100 ease-in-out active:scale-95 disabled:*:opacity-30"
 				>
 					<span
@@ -86,7 +86,7 @@
 									? 'text-eminence'
 									: ''}
 							>{mostRecentTimeline != null
-								? mostRecentTimeline[mostRecentTimeline.length - 1].match(/[A-Z][a-z]+/g).join(' ')
+								? mostRecentTimeline[mostRecentTimeline.length - 1].match(/[A-Z][a-z]+/g)?.join(' ')
 								: 'Nothing'}</span
 						></span
 					>

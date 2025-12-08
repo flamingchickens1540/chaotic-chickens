@@ -1,16 +1,23 @@
 <script lang="ts">
-	import { type FrontEndMatch } from '@/types';
+	import { type FrontendTeamMatch } from '@/types';
 
 	import Rate from '@/components/Rate.svelte';
 	import ToggleGroup from '@/components/ToggleGroup.svelte';
 
-	let { match = $bindable() }: { match: FrontEndMatch } = $props();
+	let { match = $bindable() }: { match: FrontendTeamMatch } = $props();
 </script>
 
 <div class="flex flex-col gap-4 overflow-y-scroll">
 	<div class="flex flex-col gap-2">
 		<h2 class="text-center text-2xl font-bold">Moved During Auto?</h2>
-		<ToggleGroup name="auto-move" bind:selected={match.autoMobility} items={[true, false]} />
+		<ToggleGroup
+			name="auto-move"
+			bind:selected={match.autoMobility}
+			items={[
+				{ display: 'true', value: true },
+				{ display: 'false', value: false }
+			]}
+		/>
 	</div>
 
 	<div class="flex flex-col gap-2">

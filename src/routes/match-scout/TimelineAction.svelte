@@ -11,6 +11,6 @@
 		? 'bg-jungle-green'
 		: 'bg-eminence'}"
 >
-	<span>{action.match(/[A-Z][a-z]+/g).join(' ')}</span>
+	<span>{action.match(/[A-Z][a-z]+/g)?.join(' ')}</span>
 	<button onclick={() => remove()}><X /></button>
 </div>
