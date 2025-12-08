@@ -80,7 +80,7 @@
 						? 'pointer-events-none *:opacity-30'
 						: ''}"
 					onclick={() =>
-						mostRecentAction === 'Auto' ? match.timeline.auto.pop() : match.timeline.tele.pop()}
+						mostRecentAction[0] === 'Auto' ? match.timeline.auto.pop() : match.timeline.tele.pop()}
 				>
 					<span
 						>Undo <span
