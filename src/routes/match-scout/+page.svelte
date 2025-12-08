@@ -29,15 +29,8 @@
 		scout: 'daisy'
 	});
 
-	let mostRecentAction: [('Auto' | 'Tele')?, Action?] = $state([null, null]);
-
-	$effect(() => console.log(match.timeline.auto));
-	// ScoreGrass
-	// ScoreRobot
-	// ScoreBunny ;
-	// ScoreFeedingStation
-
-	$inspect(mostRecentAction);
+	let mostRecentAction: ('Auto' | 'Tele')? = null;
+    let mostRecentTimeline = $derived(mostRecentAction === 'Auto' ? match.timeline.auto : mostRecentAction === 'Tele' ? match.timeline.tele : null);
 
 	let game_stage: LocalStore<'Auto' | 'Tele' | 'Post'> = $state(localStore('game_stage', 'Auto'));
 
@@ -79,18 +72,17 @@
 					null
 						? 'pointer-events-none *:opacity-30'
 						: ''}"
-					onclick={() =>
-						mostRecentAction[0] === 'Auto' ? match.timeline.auto.pop() : match.timeline.tele.pop()}
+					onclick={() => mostRecentTimeline.pop()}
 				>
 					<span
 						>Undo <span
-							class={mostRecentAction[0] === 'Auto'
+							class={mostRecentAction === 'Auto'
 								? 'text-jungle-green'
-								: mostRecentAction[0] === 'Tele'
+								: mostRecentAction === 'Tele'
 									? 'text-eminence'
 									: ''}
-							>{mostRecentAction[1] !== null
-								? mostRecentAction[1].match(/[A-Z][a-z]+/g).join(' ')
+							>{mostRecentTimeline[mostRecentTimeline.length - 1] != null
+								? mostRecentTimeline[mostRecentTimeline.length - 1].match(/[A-Z][a-z]+/g).join(' ')
 								: 'Nothing'}</span
 						></span
 					>

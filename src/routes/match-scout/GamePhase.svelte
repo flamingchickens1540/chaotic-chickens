@@ -7,12 +7,12 @@
 		timeline = $bindable()
 	}: {
 		phase: 'Auto' | 'Tele';
-		mostRecentAction: ['Auto' | 'Tele', Action?];
+		mostRecentAction: ('Auto' | 'Tele')?;
 		timeline: Timeline;
 	} = $props();
 
 	const buttonPressed = $derived((action: Action) => {
-		mostRecentAction = [phase, action];
+		mostRecentAction = phase;
 		if (phase === 'Auto') timeline.auto.push(action);
 		else timeline.tele.push(action);
 	});
