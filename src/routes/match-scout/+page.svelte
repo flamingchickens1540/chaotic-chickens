@@ -29,8 +29,14 @@
 		scout: 'daisy'
 	});
 
-	let mostRecentAction: ('Auto' | 'Tele')? = null;
-    let mostRecentTimeline = $derived(mostRecentAction === 'Auto' ? match.timeline.auto : mostRecentAction === 'Tele' ? match.timeline.tele : null);
+	let mostRecentAction: 'Auto' | 'Tele' | null = null;
+	let mostRecentTimeline = $derived(
+		mostRecentAction === 'Auto'
+			? match.timeline.auto
+			: mostRecentAction === 'Tele'
+				? match.timeline.tele
+				: null
+	);
 
 	let game_stage: LocalStore<'Auto' | 'Tele' | 'Post'> = $state(localStore('game_stage', 'Auto'));
 
@@ -68,11 +74,9 @@
 		<div class="flex flex-col gap-2">
 			{#if game_stage.value === 'Auto' || game_stage.value === 'Tele'}
 				<button
-					class="grow-0 rounded-lg bg-gunmetal p-4 text-xl font-semibold transition-transform duration-100 ease-in-out active:scale-95 {mostRecentAction[1] ===
-					null
-						? 'pointer-events-none *:opacity-30'
-						: ''}"
+					disabled={mostRecentAction === null}
 					onclick={() => mostRecentTimeline.pop()}
+					class="pointer-events-none grow-0 rounded-lg bg-gunmetal p-4 text-xl font-semibold transition-transform duration-100 ease-in-out active:scale-95 disabled:*:opacity-30"
 				>
 					<span
 						>Undo <span
@@ -81,7 +85,7 @@
 								: mostRecentAction === 'Tele'
 									? 'text-eminence'
 									: ''}
-							>{mostRecentTimeline[mostRecentTimeline.length - 1] != null
+							>{mostRecentTimeline != null
 								? mostRecentTimeline[mostRecentTimeline.length - 1].match(/[A-Z][a-z]+/g).join(' ')
 								: 'Nothing'}</span
 						></span

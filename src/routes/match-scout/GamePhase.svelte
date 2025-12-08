@@ -7,7 +7,7 @@
 		timeline = $bindable()
 	}: {
 		phase: 'Auto' | 'Tele';
-		mostRecentAction: ('Auto' | 'Tele')?;
+		mostRecentAction: 'Auto' | 'Tele' | null;
 		timeline: Timeline;
 	} = $props();
 
