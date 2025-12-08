@@ -17,7 +17,7 @@
 		>
 			<input
 				type="radio"
-				name={`${name}-switcher`}
+				name="{name}-switcher"
 				value={item}
 				bind:group={selected}
 				class="hidden"
