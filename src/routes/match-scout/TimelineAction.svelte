@@ -4,8 +4,6 @@
 
 	let { phase, action, remove }: { phase: 'Auto' | 'Tele'; action: Action; remove: () => void } =
 		$props();
-
-	console.log('type of action ', typeof action);
 </script>
 
 <div

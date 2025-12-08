@@ -74,7 +74,7 @@
 		<div class="flex flex-col gap-2">
 			{#if game_stage.value === 'Auto' || game_stage.value === 'Tele'}
 				<button
-					disabled={mostRecentAction === null}
+					disabled={mostRecentTimeline === null}
 					onclick={() => mostRecentTimeline.pop()}
 					class="pointer-events-none grow-0 rounded-lg bg-gunmetal p-4 text-xl font-semibold transition-transform duration-100 ease-in-out active:scale-95 disabled:*:opacity-30"
 				>
@@ -101,4 +101,8 @@
 		</div>
 	</div>
 </div>
-<Timeline bind:displaying={timelineDisplaying} bind:timeline={match.timeline} />
+<Timeline
+	bind:displaying={timelineDisplaying}
+	bind:mostRecentAction
+	bind:timeline={match.timeline}
+/>

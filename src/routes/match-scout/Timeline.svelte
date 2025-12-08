@@ -6,17 +6,28 @@
 
 	let {
 		displaying = $bindable(),
-		timeline = $bindable()
+		timeline = $bindable(),
+		mostRecentAction = $bindable()
 	}: {
 		displaying: boolean;
 		timeline: Timeline;
+		mostRecentAction: 'Auto' | 'Tele' | null;
 	} = $props();
 
+	const remove_auto = (index: number) => {
+		timeline.auto.splice(index, 1);
+	};
+	const remove_tele = (index: number) => {
+		timeline.tele.splice(index, 1);
+	};
+
 	const moveUp = () => {
+		mostRecentAction = 'Auto';
 		const firstTele = timeline.tele.shift();
 		timeline.auto.push(firstTele!);
 	};
 	const moveDown = () => {
+		mostRecentAction = 'Tele';
 		const lastAuto = timeline.auto.pop()!;
 		// NOTE This function will never be called while the conversion is invalid
 		// Thus our conversion is safe
