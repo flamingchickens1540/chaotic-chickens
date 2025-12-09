@@ -8,7 +8,7 @@
 		next,
 		prev
 	}: {
-		team_key: number;
+		team_key: string;
 		game_stage: string;
 		color: string;
 		prev: () => void;

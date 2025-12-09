@@ -10,13 +10,14 @@
 
 	let timelineDisplaying = $state(false);
 
-	let color = 'blue';
-	let team = 1540;
+	const color = localStore('color', '');
+	const teamKey = localStore('teamKey', '');
+	const matchKey = localStore('matchKey', '');
 
 	let match: FrontendTeamMatch = $state({
-		matchKey: 'fwejifj',
-		eventKey: 'feoiwf',
-		teamKey: '1540',
+		matchKey: matchKey.value,
+		eventKey: '2025orbb',
+		teamKey: teamKey.value,
 		timeline: {
 			auto: [],
 			tele: []
@@ -59,9 +60,9 @@
 	{...useSwipe(swipeHandler, () => ({ timeframe: 300, minSwipeDistance: 60 }))}
 >
 	<Header
-		team_key={team}
+		team_key={teamKey.value}
 		game_stage={game_stage.value}
-		{color}
+		color={color.value}
 		next={nextGameStage}
 		prev={prevGameStage}
 	/>

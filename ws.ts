@@ -5,6 +5,7 @@ import { type ViteDevServer } from 'vite';
 let robot_queue: { team_key: string; color: 'red' | 'blue' }[] = [];
 let match_key: string = '';
 let scout_usernames: Map<string, string> = new Map();
+let match_submitted = false;
 
 const webSocketServer = {
 	name: 'webSocketServer',
@@ -36,6 +37,9 @@ const webSocketServer = {
 				const next_robot = robot_queue.pop();
 				if (!next_robot) {
 					io.to('admin_room').emit('scout_queued', username);
+					if (!match_submitted) {
+						socket.emit('queue full');
+					}
 					info(`${username} joined queue`);
 					socket.join('scout_queue');
 					return;
@@ -132,6 +136,7 @@ const webSocketServer = {
 				});
 			});
 			socket.on('submit_team_match', (team_match: FrontendTeamMatch) => {
+				match_submitted = true;
 				io.to('admin_room').emit('submitted_team_match', team_match);
 			});
 			socket.on('disconnect', async (_reason) => {
