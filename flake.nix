@@ -62,7 +62,7 @@
                 prisma
                 openssl
               ];
-              shellHook = self.checks.${system}.pre-commit.shellHook + ''
+              shellHook = ''
                 export PG=$PWD/.dev_postgres/
                 export PGDATA="$PG"data
                 export PGPORT=5432
@@ -87,6 +87,9 @@
                 alias exit="(! pidof postgres || pg_ctl -D $PGDATA stop) && exit"
               '';
             };
+          pre-commit = pkgs.mkShell {
+            inherit (self.checks.${system}.pre-commit) shellHook;
+          };
         }
       );
     };
