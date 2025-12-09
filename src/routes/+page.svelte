@@ -20,7 +20,7 @@
 		<span>Hello {username}</span>
 	</div>
 	<div class="flex flex-col gap-2">
-		<button button class="rounded bg-gunmetal p-2 disabled:opacity-30" onclick={() => goto('queue')}
+		<button class="rounded bg-gunmetal p-2 disabled:opacity-30" onclick={() => goto('queue')}
 			>Match Scout</button
 		>
 		<button class="rounded bg-gunmetal p-2 disabled:opacity-30" onclick={() => goto('manual')}

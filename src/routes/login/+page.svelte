@@ -4,8 +4,8 @@
 	import { localStore } from '@/localStore.svelte';
 	import { browser } from '$app/environment';
 
-	let username: LocalStore<string> = $state(localStore('username', ''));
-	let scout_id: LocalStore<number> = localStore('scout_id', -1);
+	let username = $state(localStore('username', ''));
+	let scout_id = localStore('scout_id', -1);
 	let waiting = $state(false);
 
 	onMount(() => {
