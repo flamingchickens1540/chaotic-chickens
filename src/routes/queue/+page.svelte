@@ -7,10 +7,6 @@
 	const username = localStore('username', 'no name');
 	let queue_full = $state(false);
 	let socket: Socket;
-	const leave = () => {
-		socket.emit('leave_scout_queue', username.value);
-		goto('/');
-	};
 
 	onMount(() => {
 		socket = io({ auth: { username: username.value } });
@@ -44,7 +40,11 @@
 	<h1 class="font-heading p-2 text-5xl font-bold text-yellow-400">
 		{#if queue_full}Queue Full{:else}In Queue{/if}
 	</h1>
-	<button class="rounded bg-gunmetal px-4 py-2 text-center text-xl" onclick={leave}
-		>Leave Queue</button
+	<button
+		class="rounded bg-gunmetal px-4 py-2 text-center text-xl"
+		onclick={() => {
+			socket.emit('leave_scout_queue', username.value);
+			goto('/');
+		}}>Leave Queue</button
 	>
 </div>
