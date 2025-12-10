@@ -26,7 +26,7 @@
 		autoMobility: false,
 		skill: 3,
 		notes: '',
-		scoutId: 90128340812,
+		scoutId: 1,
 		scout: 'daisy'
 	});
 

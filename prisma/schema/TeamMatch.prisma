@@ -1,31 +1,31 @@
 model TeamMatch {
-    idNum                   Int      @id @default(autoincrement())
-    eventKey                String   @default("2025orbb")
-    matchKey                String
-    team                    Team     @relation(fields: [teamKey], references: [key])
-    teamKey                 String
-    teleActions             Action[]
-    autoActions             Action[]
-    centerAuto              Boolean
-    autoMobility            Boolean
-    autoScoreGrass          Int
-    autoScoreFeedingStation Int
-    teleScoreGrass          Int
-    teleScoreFeedingStation Int
-    teleScoreRobot          Int
-    teleScoreBunny          Int
-    skill                   Int
-    notes                   String
-    scoutName               String
-    scoutId                 Int
-    scout                   User     @relation(fields: [scoutId], references: [id])
+  idNum                   Int      @id @default(autoincrement())
+  eventKey                String   @default("2025orbb")
+  matchKey                String
+  team                    Team     @relation(fields: [teamKey], references: [key])
+  teamKey                 String
+  teleActions             Action[]
+  autoActions             Action[]
+  centerAuto              Boolean
+  autoMobility            Boolean
+  autoScoreGrass          Int
+  autoScoreFeedingStation Int
+  teleScoreGrass          Int
+  teleScoreFeedingStation Int
+  teleScoreRobot          Int
+  teleScoreBunny          Int
+  skill                   Int
+  notes                   String
+  scoutName               String
+  scoutId                 Int
+  scout                   User     @relation(fields: [scoutId], references: [id])
 
-    @@unique(name: "idKey", fields: [matchKey, teamKey])
+  @@unique(name: "idKey", fields: [matchKey, teamKey])
 }
 
 enum Action {
-    ScoreGrass
-    ScoreFeedingStation
-    ScoreRobot
-    ScoreBunny
+  ScoreGrass
+  ScoreFeedingStation
+  ScoreRobot
+  ScoreBunny
 }
