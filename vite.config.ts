@@ -4,9 +4,5 @@ import { defineConfig } from 'vite';
 import webSocketServer from './ws.js';
 
 export default defineConfig({
-	plugins: [tailwindcss(), sveltekit(), webSocketServer],
-	server: {
-		fs: { allow: ['./'] },
-		allowedHosts: true
-	}
+	plugins: [tailwindcss(), sveltekit(), webSocketServer]
 });

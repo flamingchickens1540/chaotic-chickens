@@ -3,13 +3,14 @@ import { json, type RequestEvent, type RequestHandler } from '@sveltejs/kit';
 
 // All of this is very insecure - fine for bunnybots, but for the main season I would like a better implementation
 
-// Create account
+// Create account / Login
 export const POST: RequestHandler = async ({ request }: RequestEvent) => {
 	const { name }: { name: string } = await request.json();
-	return json(await prisma.user.create({ data: { username: name } }));
+	const user = await prisma.user.findFirst({ where: { username: name } });
+	return json(user ?? (await prisma.user.create({ data: { username: name } })));
 };
 
-// Login
+// find user
 export const GET: RequestHandler = async ({ request }: RequestEvent) => {
 	const { id }: { id: number } = await request.json();
 	return json(await prisma.user.findUnique({ where: { id } }));
