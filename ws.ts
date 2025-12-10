@@ -1,16 +1,30 @@
-import { error, info, warn } from 'console';
 import { type FrontendTeamMatch } from './src/lib/types';
 import { Server } from 'socket.io';
 import { type ViteDevServer } from 'vite';
 let robot_queue: { team_key: string; color: 'red' | 'blue' }[] = [];
 let match_key: string = '';
 let scout_usernames: Map<string, string> = new Map();
-let match_submitted = false;
+let match_submitted = true;
+const info = (s: string) => console.log(`\x1b[32m${s}\x1b[0m`);
+const warn = (s: string) => console.log(`\x1b[33m${s}\x1b[0m`);
+const format_teams = (teams: { team_key: string; color: 'red' | 'blue' }[]) =>
+	teams
+		.map((team) => {
+			if (team.color == 'red') {
+				return ` \x1b[31m${team.team_key}\x1b[0m`;
+			} else {
+				return ` \x1b[34m${team.team_key}\x1b[0m`;
+			}
+		})
+		.join();
 
 const webSocketServer = {
 	name: 'webSocketServer',
 	configureServer(server: ViteDevServer) {
-		if (!server.httpServer) return;
+		if (!server.httpServer) {
+			warn('Server not properly configured');
+			return;
+		}
 		const io = new Server(server.httpServer);
 		io.use((socket, next) => {
 			const username = socket.handshake.auth.username;
@@ -21,6 +35,7 @@ const webSocketServer = {
 				.filter(([_id, user]) => user === username)
 				.forEach(([id, _user]) => scout_usernames.delete(id));
 			scout_usernames.set(socket.id, username);
+			next();
 		});
 		io.on('connect', (socket) => {
 			socket.on('new_user', (user: string) => {
@@ -38,7 +53,7 @@ const webSocketServer = {
 				if (!next_robot) {
 					io.to('admin_room').emit('scout_queued', username);
 					if (!match_submitted) {
-						socket.emit('queue full');
+						socket.emit('queue_full');
 					}
 					info(`${username} joined queue`);
 					socket.join('scout_queue');
@@ -90,15 +105,7 @@ const webSocketServer = {
 					{ team_key: string; color: 'red' | 'blue' }[]
 				]) => {
 					if (!socket.rooms.has('admin_room')) return;
-					const teams_print: string = teams
-						.map((team) => {
-							if (team.color == 'red') {
-								return ` \x1b[31m${team.team_key}\x1b[0m`;
-							} else {
-								return ` \x1b[34m${team.team_key}\x1b[0m`;
-							}
-						})
-						.join();
+					const teams_print: string = format_teams(teams);
 					info(`New Match (${next_match_key}):${teams_print}`);
 					robot_queue = [];
 					const scout_queue = await io.in('scout_queue').fetchSockets();
@@ -119,12 +126,17 @@ const webSocketServer = {
 				}
 			);
 			socket.on('clear_robot_queue', () => {
+				const teams_print: string = format_teams(robot_queue);
+
+				info(`Robot queue cleared. It was ${teams_print}`);
 				robot_queue = [];
 			});
 			socket.on('get_match_key', (callback) => {
+				info(`Sending match key ${match_key}`);
 				callback({ match_key });
 			});
 			socket.on('get_robot_queue', (callback) => {
+				info(`Sending robot queue `);
 				callback({ robots: robot_queue });
 			});
 			socket.on('get_scout_queue', async (callback) => {
