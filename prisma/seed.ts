@@ -56,7 +56,7 @@ async function seedTeams() {
 				key: team.key.slice(3),
 				name: team.nickname
 			};
-		}
+		} // find the first team, whose team key is equal to the remappe
 		const name: string | undefined =
 			teams.find((team) => team.key == remapped_key.slice(0, remapped_key.length - 1))?.nickname +
 			' B';
