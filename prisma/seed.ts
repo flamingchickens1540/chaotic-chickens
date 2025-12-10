@@ -1,5 +1,5 @@
 import { faker } from '@faker-js/faker';
-import { PrismaClient, Team, TeamMatch, User } from '../src/generated/prisma/client';
+import { PrismaClient } from '../src/generated/prisma/client';
 import { info, warn } from 'console';
 
 import dotenv from 'dotenv';
@@ -49,17 +49,29 @@ async function seedTeams() {
 		return await seedFakeTeams();
 	}
 
+	const all_remapped = Object.fromEntries(
+		Object.entries(mappings)
+			.map(([key, value]) => [key, String(value)])
+			.map(([key, value]) => [
+				[key, value],
+				[value.slice(0, value.length - 1), value.slice(0, value.length - 1) + 'A']
+			])
+			.flat(1)
+	);
+
+	console.log(all_remapped);
 	const modified_teams = teams.map((team) => {
-		const remapped_key: string | undefined = mappings[team.key];
+		const remapped_key: string | undefined = all_remapped[team.key];
 		if (!remapped_key) {
 			return {
 				key: team.key.slice(3),
 				name: team.nickname
 			};
-		} // find the first team, whose team key is equal to the remappe
+		}
 		const name: string | undefined =
 			teams.find((team) => team.key == remapped_key.slice(0, remapped_key.length - 1))?.nickname +
-			' B';
+			' ' +
+			remapped_key.slice(remapped_key.length - 1);
 		if (!name) {
 			warn(`secondary team found without their primary team: ${remapped_key}`);
 			return {
