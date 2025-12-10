@@ -8,6 +8,7 @@
 	let { match = $bindable() }: { match: FrontendTeamMatch } = $props();
 
 	async function submit() {
+		console.log(match);
 		const res = await fetch('/api/team-match', {
 			method: 'POST',
 			body: JSON.stringify(match)
