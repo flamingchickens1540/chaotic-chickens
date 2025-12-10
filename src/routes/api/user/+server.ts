@@ -11,8 +11,8 @@ export const POST: RequestHandler = async ({ request }: RequestEvent) => {
 
 // Login
 export const GET: RequestHandler = async ({ request }: RequestEvent) => {
-	const { name }: { name: string } = await request.json();
-	return json(await prisma.user.findFirst({ where: { username: name } }));
+	const { id }: { id: number } = await request.json();
+	return json(await prisma.user.findUnique({ where: { id } }));
 };
 
 // Update name, admin status
