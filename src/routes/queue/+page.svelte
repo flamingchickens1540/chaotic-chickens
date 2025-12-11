@@ -18,9 +18,9 @@
 		([matchKey, { teamKey, color }]: [string, { teamKey: string; color: 'red' | 'blue' }]) => {
 			if (browser) {
 				localStorage.removeItem('matchData');
-				localStorage.setItem('matchKey', "\""+ matchKey + "\"");
-				localStorage.setItem('teamKey', "\""+teamKey+"\"");
-				localStorage.setItem('color', "\""+color+"\"");
+				localStorage.setItem('matchKey', '"' + matchKey + '"');
+				localStorage.setItem('teamKey', '"' + teamKey + '"');
+				localStorage.setItem('color', '"' + color + '"');
 			}
 			goto('/match-scout');
 		}
