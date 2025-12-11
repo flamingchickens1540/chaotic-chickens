@@ -9,7 +9,7 @@
 	let waiting = $state(false);
 
 	onMount(() => {
-		if (username.value != '' && scout_id.value) goto('/');
+		if (username.value != '' && scout_id.value != -1) goto('/');
 	});
 
 	const login = async () => {

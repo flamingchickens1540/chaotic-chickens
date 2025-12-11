@@ -8,6 +8,9 @@
 	import Postmatch from './Postmatch.svelte';
 	import Timeline from './Timeline.svelte';
 
+	const username = $state(localStore('username', ''));
+	const scout_id = $state(localStore('scout_id', -1));
+
 	let timelineDisplaying = $state(false);
 
 	let color = 'blue';
@@ -25,8 +28,8 @@
 		autoMobility: false,
 		skill: 3,
 		notes: '',
-		scoutId: 90128340812,
-		scout: 'daisy'
+		scout: username.value,
+		scoutId: scout_id.value
 	});
 
 	let mostRecentAction: 'Auto' | 'Tele' | null = $state(null);
