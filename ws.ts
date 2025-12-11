@@ -38,6 +38,10 @@ const webSocketServer = {
 			next();
 		});
 		io.on('connect', (socket) => {
+			if (socket.handshake.auth.token == 'Admin') {
+				socket.join('admin');
+				info(`Admin aquired: ${socket.handshake.auth.token}`);
+			}
 			socket.on('newUser', (user: string) => {
 				scoutUsernames.set(socket.id, user);
 				info(`New user ${user} on socket ${socket.id}`);

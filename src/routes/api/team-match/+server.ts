@@ -1,8 +1,8 @@
 import { prisma } from '$lib/prisma';
 import type { FrontendTeamMatch } from '$lib/types';
-import { error, info } from 'console';
+import { info, warn } from 'console';
 import type { Action, TeamMatch } from '../../../generated/prisma/browser';
-import { json, type RequestHandler } from '@sveltejs/kit';
+import { error, json, type RequestHandler } from '@sveltejs/kit';
 
 export const POST: RequestHandler = async ({ request }: any) => {
 	const req: FrontendTeamMatch = await request.json();
@@ -31,8 +31,8 @@ export const POST: RequestHandler = async ({ request }: any) => {
 		info(res);
 		return json(res);
 	} catch (err: any) {
-		error(`error while submitting match: \n${err}\nMatch data:`);
-		error(req);
+		warn(`error while submitting match: \n${err}\nMatch data:`);
+		warn(req);
 		return error(500, err);
 	}
 };
