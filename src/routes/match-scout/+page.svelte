@@ -39,14 +39,14 @@
 				: null
 	);
 
-	let game_stage: LocalStore<'Auto' | 'Tele' | 'Post'> = $state(localStore('game_stage', 'Auto'));
+	let gameStage: LocalStore<'Auto' | 'Tele' | 'Post'> = $state(localStore('gameStage', 'Auto'));
 
 	const nextGameStage = () => {
-		game_stage.value = game_stage.value === 'Auto' ? 'Tele' : 'Post';
+		gameStage.value = gameStage.value === 'Auto' ? 'Tele' : 'Post';
 	};
 
 	const prevGameStage = () => {
-		game_stage.value = game_stage.value === 'Post' ? 'Tele' : 'Auto';
+		gameStage.value = gameStage.value === 'Post' ? 'Tele' : 'Auto';
 	};
 
 	function swipeHandler(event: SwipeCustomEvent) {
@@ -60,20 +60,20 @@
 	{...useSwipe(swipeHandler, () => ({ timeframe: 300, minSwipeDistance: 60 }))}
 >
 	<Header
-		team_key={teamKey.value}
-		game_stage={game_stage.value}
+		teamKey={teamKey.value}
+		gameStage={gameStage.value}
 		color={color.value}
 		next={nextGameStage}
 		prev={prevGameStage}
 	/>
 	<div class="grid max-h-full grid-rows-[1fr_auto] gap-2 overflow-y-scroll">
-		{#if game_stage.value === 'Auto' || game_stage.value === 'Tele'}
-			<GamePhase phase={game_stage.value} bind:mostRecentAction bind:timeline={match.timeline} />
-		{:else if game_stage.value === 'Post'}
+		{#if gameStage.value === 'Auto' || gameStage.value === 'Tele'}
+			<GamePhase phase={gameStage.value} bind:mostRecentAction bind:timeline={match.timeline} />
+		{:else if gameStage.value === 'Post'}
 			<Postmatch bind:match />
 		{/if}
 		<div class="flex flex-col gap-2">
-			{#if game_stage.value === 'Auto' || game_stage.value === 'Tele'}
+			{#if gameStage.value === 'Auto' || gameStage.value === 'Tele'}
 				<button
 					disabled={mostRecentTimeline === null || mostRecentTimeline.length === 0}
 					onclick={() => {

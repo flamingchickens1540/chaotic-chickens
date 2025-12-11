@@ -49,7 +49,7 @@ async function seedTeams() {
 		return await seedFakeTeams();
 	}
 
-	const all_remapped = Object.fromEntries(
+	const fullMappings = Object.fromEntries(
 		Object.entries(mappings)
 			.map(([key, value]) => [key, String(value)])
 			.map(([key, value]) => [
@@ -59,32 +59,32 @@ async function seedTeams() {
 			.flat(1)
 	);
 
-	console.log(all_remapped);
-	const modified_teams = teams.map((team) => {
-		const remapped_key: string | undefined = all_remapped[team.key];
-		if (!remapped_key) {
+	console.log(fullMappings);
+	const mappedTeams = teams.map((team) => {
+		const remappedKey: string | undefined = fullMappings[team.key];
+		if (!remappedKey) {
 			return {
 				key: team.key.slice(3),
 				name: team.nickname
 			};
 		}
 		const name: string | undefined =
-			teams.find((team) => team.key == remapped_key.slice(0, remapped_key.length - 1))?.nickname +
+			teams.find((team) => team.key == remappedKey.slice(0, remappedKey.length - 1))?.nickname +
 			' ' +
-			remapped_key.slice(remapped_key.length - 1);
+			remappedKey.slice(remappedKey.length - 1);
 		if (!name) {
-			warn(`secondary team found without their primary team: ${remapped_key}`);
+			warn(`secondary team found without their primary team: ${remappedKey}`);
 			return {
 				key: team.key.slice(3),
 				name: team.nickname
 			};
 		}
 		return {
-			key: remapped_key.slice(3),
+			key: remappedKey.slice(3),
 			name
 		};
 	});
-	return await prisma.team.createMany({ data: modified_teams });
+	return await prisma.team.createMany({ data: mappedTeams });
 }
 
 async function seedFakeTeams() {

@@ -1,19 +1,19 @@
 import { type FrontendTeamMatch } from './src/lib/types';
 import { Server } from 'socket.io';
 import { type ViteDevServer } from 'vite';
-let robot_queue: { team_key: string; color: 'red' | 'blue' }[] = [];
-let match_key: string = '';
-let scout_usernames: Map<string, string> = new Map();
-let match_submitted = true;
+let robotQueue: { teamKey: string; color: 'red' | 'blue' }[] = [];
+let matchKey: string = '';
+let scoutUsernames: Map<string, string> = new Map();
+let matchSubmitted = true;
 const info = (s: string) => console.log(`\x1b[32m${s}\x1b[0m`);
 const warn = (s: string) => console.log(`\x1b[33m${s}\x1b[0m`);
-const format_teams = (teams: { team_key: string; color: 'red' | 'blue' }[]) =>
+const formatTeams = (teams: { teamKey: string; color: 'red' | 'blue' }[]) =>
 	teams
 		.map((team) => {
 			if (team.color == 'red') {
-				return ` \x1b[31m${team.team_key}\x1b[0m`;
+				return ` \x1b[31m${team.teamKey}\x1b[0m`;
 			} else {
-				return ` \x1b[34m${team.team_key}\x1b[0m`;
+				return ` \x1b[34m${team.teamKey}\x1b[0m`;
 			}
 		})
 		.join();
@@ -31,131 +31,129 @@ const webSocketServer = {
 			if (!username) {
 				return next(new Error('No username provided'));
 			}
-			Array.from(scout_usernames.entries())
+			Array.from(scoutUsernames.entries())
 				.filter(([_id, user]) => user === username)
-				.forEach(([id, _user]) => scout_usernames.delete(id));
-			scout_usernames.set(socket.id, username);
+				.forEach(([id, _user]) => scoutUsernames.delete(id));
+			scoutUsernames.set(socket.id, username);
 			next();
 		});
 		io.on('connect', (socket) => {
-			socket.on('new_user', (user: string) => {
-				scout_usernames.set(socket.id, user);
+			socket.on('newUser', (user: string) => {
+				scoutUsernames.set(socket.id, user);
 				info(`New user ${user} on socket ${socket.id}`);
 			});
-			socket.on('join_queue', () => {
-				const username = scout_usernames.get(socket.id);
+			socket.on('joinQueue', () => {
+				const username = scoutUsernames.get(socket.id);
 				if (!username) {
 					warn(`Undefined scout joined queue. ID: ${socket.id}`);
 					socket.disconnect();
 					return;
 				}
-				const next_robot = robot_queue.pop();
-				if (!next_robot) {
-					io.to('admin_room').emit('scout_queued', username);
-					if (!match_submitted) {
-						socket.emit('queue_full');
+				const nextRobot = robotQueue.pop();
+				if (!nextRobot) {
+					io.to('admin').emit('scoutQueued', username);
+
+					if (!matchSubmitted) {
+						socket.emit('queueFull');
 					}
 					info(`${username} joined queue`);
-					socket.join('scout_queue');
+					socket.join('scoutQueue');
 					return;
 				}
-				io.to('admin_room').emit('robot_left_queue', {
-					next_robot,
+				io.to('admin').emit('robotLeftQueue', {
+					nextRobot,
 					scout: username
 				});
-				info(`${username} recieved robot ${next_robot.team_key}`);
-				socket.emit('recieve_robot', [match_key, next_robot]);
+				info(`${username} recieved robot ${nextRobot.teamKey}`);
+				socket.emit('recieveRobot', [matchKey, nextRobot]);
 			});
-			async function leave_scout_queue(scout_id: string) {
-				const socket_id = Array.from(scout_usernames.entries())
-					.filter(([_id, user]) => user == scout_id)
+			async function leaveScoutQueue(scoutId: string) {
+				const socketId = Array.from(scoutUsernames.entries())
+					.filter(([_id, user]) => user == scoutId)
 					.map(([id, _user]) => id)[0];
-				io.emit('scout_left_queue', scout_id);
-				const socket = (await io.in('scout_queue').fetchSockets()).find(
-					(socket) => socket.id == socket_id
+				io.emit('scoutLeftQueue', scoutId);
+				const socket = (await io.in('scoutQueue').fetchSockets()).find(
+					(socket) => socket.id == socketId
 				);
 				if (!socket) {
 					return;
 				}
-				socket.leave('scout_queue');
+				socket.leave('scoutQueue');
 
-				const scout_queue = (await io.in('scout_queue').fetchSockets()).map((socket) => socket.id);
-				if (scout_queue.length === 0) {
-					info(`${scout_id} left queue; scout queue now empty`);
+				const scoutQueue = (await io.in('scoutQueue').fetchSockets()).map((socket) => socket.id);
+				if (scoutQueue.length === 0) {
+					info(`${scoutId} left queue; scout queue now empty`);
 				} else {
-					info(`${scout_id} left queue; scout queue length: ${scout_queue.length}`);
+					info(`${scoutId} left queue; scout queue length: ${scoutQueue.length}`);
 				}
 			}
 
-			socket.on('leave_scout_queue', leave_scout_queue);
+			socket.on('leaveScoutQueue', leaveScoutQueue);
 
-			socket.on('leave_robot_queue', (robot: { team_key: string; color: 'red' | 'blue' }) => {
+			socket.on('leaveRobotQueue', (robot: { teamKey: string; color: 'red' | 'blue' }) => {
 				const robotsEqual = (
-					robot1: { team_key: string; color: 'red' | 'blue' },
-					robot2: { team_key: string; color: 'red' | 'blue' }
-				) => robot1.team_key === robot2.team_key && robot1.color === robot2.color;
-				const index = robot_queue.findIndex((robot_t) => robotsEqual(robot, robot_t));
+					robot1: { teamKey: string; color: 'red' | 'blue' },
+					robot2: { teamKey: string; color: 'red' | 'blue' }
+				) => robot1.teamKey === robot2.teamKey && robot1.color === robot2.color;
+				const index = robotQueue.findIndex((compared) => robotsEqual(robot, compared));
 				if (index === -1) return;
-				robot_queue.splice(index, 1);
+				robotQueue.splice(index, 1);
 			});
 			socket.on(
-				'send_match',
-				async ([next_match_key, teams]: [
-					string,
-					{ team_key: string; color: 'red' | 'blue' }[]
-				]) => {
-					if (!socket.rooms.has('admin_room')) return;
-					const teams_print: string = format_teams(teams);
-					info(`New Match (${next_match_key}):${teams_print}`);
-					robot_queue = [];
-					const scout_queue = await io.in('scout_queue').fetchSockets();
-					for (const scout of scout_queue.filter(
-						(scout) => scout && scout.id && scout_usernames.get(scout.id)
+				'sendMatch',
+				async ([nextMatchKey, teams]: [string, { teamKey: string; color: 'red' | 'blue' }[]]) => {
+					if (!socket.rooms.has('admin')) return;
+					const teamsPrint: string = formatTeams(teams);
+					info(`New Match (${nextMatchKey}):${teamsPrint}`);
+					robotQueue = [];
+					const scoutQueue = await io.in('scoutQueue').fetchSockets();
+					for (const scout of scoutQueue.filter(
+						(scout) => scout && scout.id && scoutUsernames.get(scout.id)
 					)) {
-						const next_robot = teams.pop();
-						if (!next_robot) break;
-						const username = scout_usernames.get(scout.id);
-						info(`${username} recieved robot ${next_robot.team_key} from queue`);
-						scout.leave('scout_queue');
-						scout.emit('recieve_robot', [next_match_key, next_robot]);
-						io.to('admin_room').emit('robot_left_queue', { next_robot, scout: username });
+						const nextRobot = teams.pop();
+						if (!nextRobot) break;
+						const username = scoutUsernames.get(scout.id);
+						info(`${username} recieved robot ${nextRobot.teamKey} from queue`);
+						scout.leave('scoutQueue');
+						scout.emit('recieveRobot', [nextMatchKey, nextRobot]);
+						io.to('admin').emit('robotLeftQueue', { nextRobot, scout: username });
 					}
-					io.to('admin_room').emit('robot_joined_queue', teams);
-					robot_queue = teams;
-					match_key = next_match_key;
+					io.to('admin').emit('robotJoinedQueue', teams);
+					robotQueue = teams;
+					matchKey = nextMatchKey;
 				}
 			);
-			socket.on('clear_robot_queue', () => {
-				const teams_print: string = format_teams(robot_queue);
+			socket.on('clearRobotQueue', () => {
+				const teamsPrint: string = formatTeams(robotQueue);
 
-				info(`Robot queue cleared. It was ${teams_print}`);
-				robot_queue = [];
+				info(`Robot queue cleared. It was ${teamsPrint}`);
+				robotQueue = [];
 			});
-			socket.on('get_match_key', (callback) => {
-				info(`Sending match key ${match_key}`);
-				callback({ match_key });
+			socket.on('getMatchKey', (callback) => {
+				info(`Sending match key ${matchKey}`);
+				callback({ matchKey });
 			});
-			socket.on('get_robot_queue', (callback) => {
+			socket.on('getRobotQueue', (callback) => {
 				info(`Sending robot queue `);
-				callback({ robots: robot_queue });
+				callback({ robots: robotQueue });
 			});
-			socket.on('get_scout_queue', async (callback) => {
-				const scouts = (await io.in('scout_queue').fetchSockets()).map((scout) =>
-					scout_usernames.get(scout.id)
+			socket.on('getScoutQueue', async (callback) => {
+				const scouts = (await io.in('scoutQueue').fetchSockets()).map((scout) =>
+					scoutUsernames.get(scout.id)
 				);
 				callback({
 					scouts
 				});
 			});
-			socket.on('submit_team_match', (team_match: FrontendTeamMatch) => {
-				match_submitted = true;
-				io.to('admin_room').emit('submitted_team_match', team_match);
+			socket.on('submitTeamMatch', (teamMatch: FrontendTeamMatch) => {
+				matchSubmitted = true;
+				io.to('admin').emit('submittedTeamMatch', teamMatch);
 			});
 			socket.on('disconnect', async (_reason) => {
-				const scout_id = scout_usernames.get(socket.id);
-				if (!scout_id) return;
-				scout_usernames.delete(socket.id);
-				leave_scout_queue(scout_id);
+				const scoutId = scoutUsernames.get(socket.id);
+				if (!scoutId) return;
+				scoutUsernames.delete(socket.id);
+				leaveScoutQueue(scoutId);
 			});
 		});
 	}
