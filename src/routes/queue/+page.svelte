@@ -16,11 +16,12 @@
 	socket.on(
 		'recieveRobot',
 		([matchKey, { teamKey, color }]: [string, { teamKey: string; color: 'red' | 'blue' }]) => {
-			browser &&
-				localStorage.setItem('matchData', '') &&
-				localStorage.setItem('matchKey', matchKey) &&
-				localStorage.setItem('teamKey', teamKey) &&
-				localStorage.setItem('color', color);
+			if (browser) {
+				localStorage.removeItem('matchData');
+				localStorage.setItem('matchKey', "\""+ matchKey + "\"");
+				localStorage.setItem('teamKey', "\""+teamKey+"\"");
+				localStorage.setItem('color', "\""+color+"\"");
+			}
 			goto('/match-scout');
 		}
 	);
