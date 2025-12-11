@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { useSwipe, type SwipeCustomEvent } from 'svelte-gestures';
 	import { LocalStore, localStore } from '@/localStore.svelte';
-	import { type FrontendTeamMatch, type Action } from '@/types';
+	import { type FrontendTeamMatch } from '@/types';
 
 	import GamePhase from './GamePhase.svelte';
 	import Header from './Header.svelte';
@@ -10,32 +10,33 @@
 
 	let timelineDisplaying = $state(false);
 
-	const color = localStore('color', '');
-	const teamKey = localStore('teamKey', '');
-	const matchKey = localStore('matchKey', '');
+	const color = localStore('color', '').value;
 
-	let match: FrontendTeamMatch = $state({
-		matchKey: matchKey.value,
-		eventKey: '2025orbb',
-		teamKey: teamKey.value,
-		timeline: {
-			auto: [],
-			tele: []
-		},
-		autoStart: 'Close',
-		autoMobility: false,
-		skill: 3,
-		notes: '',
-		scoutId: 1,
-		scout: 'daisy'
-	});
+	// need to clear on submission and on joining from queue, also a homescreen button could be "return to match" and just runs goto(/match-scout)
+	let match: LocalStore<FrontendTeamMatch> = $state(
+		localStore('matchData', {
+			matchKey: localStore('matchKey', '').value,
+			eventKey: '2025orbb',
+			teamKey: localStore('teamKey', '').value,
+			timeline: {
+				auto: [],
+				tele: []
+			},
+			autoStart: 'Close',
+			autoMobility: false,
+			skill: 3,
+			notes: '',
+			scout: localStore('username', '').value,
+			scoutId: localStore('scoutId', -1).value
+		})
+	);
 
 	let mostRecentAction: 'Auto' | 'Tele' | null = $state(null);
 	let mostRecentTimeline = $derived(
 		mostRecentAction === 'Auto'
-			? match.timeline.auto
+			? match.value.timeline.auto
 			: mostRecentAction === 'Tele'
-				? match.timeline.tele
+				? match.value.timeline.tele
 				: null
 	);
 
@@ -60,17 +61,21 @@
 	{...useSwipe(swipeHandler, () => ({ timeframe: 300, minSwipeDistance: 60 }))}
 >
 	<Header
-		teamKey={teamKey.value}
+		teamKey={match.value.teamKey}
 		gameStage={gameStage.value}
-		color={color.value}
+		{color}
 		next={nextGameStage}
 		prev={prevGameStage}
 	/>
 	<div class="grid max-h-full grid-rows-[1fr_auto] gap-2 overflow-y-scroll">
 		{#if gameStage.value === 'Auto' || gameStage.value === 'Tele'}
-			<GamePhase phase={gameStage.value} bind:mostRecentAction bind:timeline={match.timeline} />
+			<GamePhase
+				phase={gameStage.value}
+				bind:mostRecentAction
+				bind:timeline={match.value.timeline}
+			/>
 		{:else if gameStage.value === 'Post'}
-			<Postmatch bind:match />
+			<Postmatch bind:match={match.value} />
 		{/if}
 		<div class="flex flex-col gap-2">
 			{#if gameStage.value === 'Auto' || gameStage.value === 'Tele'}
@@ -118,5 +123,5 @@
 <Timeline
 	bind:displaying={timelineDisplaying}
 	bind:mostRecentAction
-	bind:timeline={match.timeline}
+	bind:timeline={match.value.timeline}
 />
