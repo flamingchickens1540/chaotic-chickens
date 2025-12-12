@@ -123,7 +123,10 @@ const webSocketServer = {
 						info(`${username} recieved robot ${nextRobot.teamKey} from queue`);
 						scout.leave('scoutQueue');
 						scout.emit('recieveRobot', [nextMatchKey, nextRobot]);
-						io.to('admin').emit('robotLeftQueue', { nextRobot, scout: username });
+						io.to('admin').emit('robotLeftQueue', {
+							nextRobot,
+							scout: username
+						});
 					}
 					io.to('admin').emit('robotJoinedQueue', teams);
 					robotQueue = teams;
