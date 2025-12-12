@@ -9,7 +9,7 @@
 	import Timeline from './Timeline.svelte';
 
 	const username = $state(localStore('username', ''));
-	const scout_id = $state(localStore('scout_id', -1));
+	const scoutId = $state(localStore('scoutId', -1));
 
 	let timelineDisplaying = $state(false);
 
@@ -30,7 +30,7 @@
 			skill: 3,
 			notes: '',
 			scout: username.value,
-			scoutId: scout_id.value
+			scoutId: scoutId.value
 		})
 	);
 
