@@ -3,9 +3,11 @@
 	import { goto } from '$app/navigation';
 	import { localStore } from '@/localStore.svelte';
 
+	import ToggleGroup from '@/components/ToggleGroup.svelte';
+
 	let teamKey = localStore('teamKey', '');
 	let matchKey = localStore('matchKey', '');
-	let color = localStore('color', '');
+	let color = localStore('color', 'red');
 	let disabled = $derived(
 		teamKey.value == '' || matchKey.value == '' || color.value == ''
 			? 'pointer-events-none opacity-30'
@@ -26,15 +28,7 @@
 		bind:value={matchKey.value}
 	></textarea>
 
-	<select
-		name="color"
-		bind:value={color.value}
-		class="col-span-2 block w-full rounded bg-gunmetal p-4"
-	>
-		<option selected value="">Select a color</option>
-		<option value="blue">Blue</option>
-		<option value="red">Red</option>
-	</select>
+	<ToggleGroup name="team-color" bind:selected={color.value} items={['red', 'blue']} />
 
 	<button
 		class="w-full rounded bg-gunmetal p-4 text-lg font-semibold {disabled}"
