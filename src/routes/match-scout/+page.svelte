@@ -60,7 +60,7 @@
 </script>
 
 <div
-	class="m-auto grid max-h-dvh min-h-dvh max-w-2xl grid-rows-[auto_1fr] gap-2 p-2"
+	class="m-auto flex min-h-dvh max-w-2xl flex-col justify-stretch gap-2 p-2"
 	{...useSwipe(swipeHandler, () => ({ timeframe: 300, minSwipeDistance: 60 }))}
 >
 	<Header
@@ -70,56 +70,50 @@
 		next={nextGameStage}
 		prev={prevGameStage}
 	/>
-	<div class="grid max-h-full grid-rows-[1fr_auto] gap-2 overflow-y-scroll">
+	{#if gameStage.value === 'Auto' || gameStage.value === 'Tele'}
+		<GamePhase phase={gameStage.value} bind:mostRecentAction bind:timeline={match.value.timeline} />
+	{:else if gameStage.value === 'Post'}
+		<Postmatch bind:match={match.value} />
+	{/if}
+	<div class="flex flex-col gap-2">
 		{#if gameStage.value === 'Auto' || gameStage.value === 'Tele'}
-			<GamePhase
-				phase={gameStage.value}
-				bind:mostRecentAction
-				bind:timeline={match.value.timeline}
-			/>
-		{:else if gameStage.value === 'Post'}
-			<Postmatch bind:match={match.value} />
-		{/if}
-		<div class="flex flex-col gap-2">
-			{#if gameStage.value === 'Auto' || gameStage.value === 'Tele'}
-				<button
-					disabled={mostRecentTimeline === null || mostRecentTimeline.length === 0}
-					onclick={() => {
-						mostRecentTimeline?.pop();
-						mostRecentAction =
-							mostRecentTimeline?.length === 0
-								? mostRecentAction === 'Auto'
-									? null
-									: mostRecentAction === 'Tele'
-										? 'Auto'
-										: null
-								: mostRecentAction;
-					}}
-					class="grow-0 rounded-lg bg-gunmetal p-4 text-xl font-semibold transition-transform duration-100 ease-in-out active:scale-95 disabled:*:opacity-30"
-				>
-					<span
-						>Undo <span
-							class={mostRecentAction === 'Auto'
-								? 'text-jungle-green'
-								: mostRecentAction === 'Tele'
-									? 'text-eminence'
-									: ''}
-							>{(mostRecentTimeline ?? []).length > 0
-								? mostRecentTimeline?.[mostRecentTimeline?.length - 1]
-										?.match(/[A-Z][a-z]+/g)
-										?.join(' ')
-								: 'Nothing'}</span
-						></span
-					>
-				</button>
-			{/if}
 			<button
-				class="grow-0 rounded-lg bg-gunmetal p-4 text-xl font-semibold transition-transform duration-150 active:scale-95"
-				onclick={() => (timelineDisplaying = true)}
+				disabled={mostRecentTimeline === null || mostRecentTimeline.length === 0}
+				onclick={() => {
+					mostRecentTimeline?.pop();
+					mostRecentAction =
+						mostRecentTimeline?.length === 0
+							? mostRecentAction === 'Auto'
+								? null
+								: mostRecentAction === 'Tele'
+									? 'Auto'
+									: null
+							: mostRecentAction;
+				}}
+				class="grow-0 rounded-xl bg-gunmetal p-4 text-xl font-semibold transition-transform duration-100 ease-in-out active:scale-95 disabled:*:opacity-30"
 			>
-				Timeline
+				<span
+					>Undo <span
+						class={mostRecentAction === 'Auto'
+							? 'text-jungle-green'
+							: mostRecentAction === 'Tele'
+								? 'text-eminence'
+								: ''}
+						>{(mostRecentTimeline ?? []).length > 0
+							? mostRecentTimeline?.[mostRecentTimeline?.length - 1]
+									?.match(/[A-Z][a-z]+/g)
+									?.join(' ')
+							: 'Nothing'}</span
+					></span
+				>
 			</button>
-		</div>
+		{/if}
+		<button
+			class="grow-0 rounded-xl bg-gunmetal p-4 text-xl font-semibold transition-transform duration-150 active:scale-95"
+			onclick={() => (timelineDisplaying = true)}
+		>
+			Timeline
+		</button>
 	</div>
 </div>
 <Timeline
