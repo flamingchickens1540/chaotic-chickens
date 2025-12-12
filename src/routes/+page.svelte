@@ -16,9 +16,9 @@
 <div class="flex flex-col gap-4 p-4">
 	<div class="grid grid-cols-[1fr_auto_1fr] gap-2">
 		<button onclick={logout}><LogOut /></button>
-		<span>Hello {username.value}</span>
+		<span class="text-lg font-semibold">Hello {username.value}</span>
 	</div>
-	<div class="flex flex-col gap-2">
+	<div class="flex flex-col gap-2 text-xl font-semibold">
 		<button class="rounded bg-gunmetal p-2 disabled:opacity-30" onclick={() => goto('queue')}
 			>Match Scout</button
 		>
