@@ -1,5 +1,5 @@
 import { faker } from '@faker-js/faker';
-import { PrismaClient, Team, TeamMatch, User } from '../src/generated/prisma/client';
+import { PrismaClient } from '../src/generated/prisma/client';
 import { info, warn } from 'console';
 
 import dotenv from 'dotenv';
@@ -49,30 +49,42 @@ async function seedTeams() {
 		return await seedFakeTeams();
 	}
 
-	const modified_teams = teams.map((team) => {
-		const remapped_key: string | undefined = mappings[team.key];
-		if (!remapped_key) {
+	const fullMappings = Object.fromEntries(
+		Object.entries(mappings)
+			.map(([key, value]) => [key, String(value)])
+			.map(([key, value]) => [
+				[key, value],
+				[value.slice(0, value.length - 1), value.slice(0, value.length - 1) + 'A']
+			])
+			.flat(1)
+	);
+
+	console.log(fullMappings);
+	const mappedTeams = teams.map((team) => {
+		const remappedKey: string | undefined = fullMappings[team.key];
+		if (!remappedKey) {
 			return {
 				key: team.key.slice(3),
 				name: team.nickname
 			};
 		}
 		const name: string | undefined =
-			teams.find((team) => team.key == remapped_key.slice(0, remapped_key.length - 1))?.nickname +
-			' B';
+			teams.find((team) => team.key == remappedKey.slice(0, remappedKey.length - 1))?.nickname +
+			' ' +
+			remappedKey.slice(remappedKey.length - 1);
 		if (!name) {
-			warn(`secondary team found without their primary team: ${remapped_key}`);
+			warn(`secondary team found without their primary team: ${remappedKey}`);
 			return {
 				key: team.key.slice(3),
 				name: team.nickname
 			};
 		}
 		return {
-			key: remapped_key.slice(3),
+			key: remappedKey.slice(3),
 			name
 		};
 	});
-	return await prisma.team.createMany({ data: modified_teams });
+	return await prisma.team.createMany({ data: mappedTeams });
 }
 
 async function seedFakeTeams() {

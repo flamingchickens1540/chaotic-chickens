@@ -8,6 +8,7 @@
 	let { match = $bindable() }: { match: FrontendTeamMatch } = $props();
 
 	async function submit() {
+		console.log($state.snapshot(match));
 		const res = await fetch('/api/team-match', {
 			method: 'POST',
 			body: JSON.stringify(match)
@@ -16,7 +17,6 @@
 		if (res.status !== 200) {
 			alert('Failed to submit');
 			console.log('Failed to submit:', res);
-			return;
 		}
 
 		goto('/');
