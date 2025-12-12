@@ -7,10 +7,10 @@
 	import favicon from '$lib/assets/favicon.png';
 
 	if (browser) {
-                const oldData = localStorage.getItem('scoutId');
-        if (oldData != null) {
-            localStorage.clear();
-        }
+		const oldData = localStorage.getItem('scoutId');
+		if (oldData != null) {
+			localStorage.clear();
+		}
 		const username = $state(localStore('username', ''));
 		const scoutId = $state(localStore('scoutId', -1));
 
