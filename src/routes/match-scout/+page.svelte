@@ -95,8 +95,7 @@
 										: null
 								: mostRecentAction;
 					}}
-					class={(mostRecentTimeline === null ? 'pointer-events-none' : '') +
-						'grow-0 rounded-lg bg-gunmetal p-4 text-xl font-semibold transition-transform duration-100 ease-in-out active:scale-95 disabled:*:opacity-30'}
+					class="grow-0 rounded-lg bg-gunmetal p-4 text-xl font-semibold transition-transform duration-100 ease-in-out active:scale-95 disabled:*:opacity-30"
 				>
 					<span
 						>Undo <span
