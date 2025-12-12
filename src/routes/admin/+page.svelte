@@ -4,7 +4,13 @@
 	type Robot = { teamKey: string; color: 'red' | 'blue' };
 	type Match = [Robot, Robot, Robot, Robot, Robot, Robot];
 	// TODO: Get URL
-	const BAQ_URL = '';
+
+	type Alliance = [string, string, string];
+	type MatchCandidate = {
+		red: Alliance;
+		blue: Alliance;
+	};
+	const BAQ_URL = 'http://queue.team1540.org/';
 	const emptyMatch: () => Match = () => [
 		{ teamKey: '', color: 'red' },
 		{ teamKey: '', color: 'red' },
@@ -29,9 +35,8 @@
 	socket.on('scoutQueued', (username) => {
 		scoutQueue.push(username);
 	});
-	socket.on('robotLeftQueue', ({ nextRobot, scout }: { nextRobot: Robot; scout: string }) => {
-		//
-	});
+	// socket.on('robotLeftQueue', ({ nextRobot, scout }: { nextRobot: Robot; scout: string }) => {
+	// });
 	socket.on('scoutLeftQueue', (username: string) => {
 		scoutQueue.splice(
 			scoutQueue.findIndex((scout) => scout == username),
@@ -48,14 +53,22 @@
 	const loadFromBaq = async () => {
 		try {
 			// NOTE: this api call CREATES A NEW MATCH so check that it isn't doing that later
-			const res = await fetch(`${BAQ_URL}/api/new_match`, {
+			const res = await fetch(`${BAQ_URL}/api/get_match`, {
 				method: 'GET'
 			});
 			if (!res.ok) {
 				console.log(`Error getting data from BAQ: ${res.status}`);
 			}
-			// TODO: find out the format that this gets data in, and connect it to nextMatch type
-			const baq_data = res.json();
+			const baq_data: MatchCandidate = await res.json();
+			const data = [
+				...baq_data.red.map((team) => {
+					return { teamKey: team, color: 'red' } as Robot;
+				}),
+				...baq_data.blue.map((team) => {
+					return { teamKey: team, color: 'blue' } as Robot;
+				})
+			] as Match;
+			nextMatch = data;
 		} catch (e: any) {
 			console.log('BAQ request failed');
 		}
