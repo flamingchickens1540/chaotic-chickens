@@ -19,6 +19,12 @@
 			console.log('Failed to submit:', res);
 		}
 
+		localStorage.removeItem('gameStage');
+		localStorage.removeItem('color');
+		localStorage.removeItem('matchKey');
+		localStorage.removeItem('teamKey');
+		localStorage.removeItem('matchData');
+
 		goto('/');
 	}
 </script>
