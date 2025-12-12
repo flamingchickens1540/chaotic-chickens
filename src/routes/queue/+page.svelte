@@ -26,7 +26,7 @@
 		}
 	);
 	socket.on('scoutLeftQueue', (scout: string) => {
-		if (scout === username.value) {
+		if (scout == username.value) {
 			goto('/');
 		}
 	});
