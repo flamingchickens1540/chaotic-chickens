@@ -52,6 +52,8 @@
 				><MoveDown /></button
 			>
 		</div>
+	{:else}
+		<span class="m-auto text-lg font-semibold">nothing here yet!</span>
 	{/if}
 	{#each timeline.auto as action, i}
 		<TimelineAction phase="Auto" {action} remove={() => removeAuto(i)} />
