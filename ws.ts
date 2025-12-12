@@ -47,6 +47,7 @@ const webSocketServer = {
 				info(`New user ${user} on socket ${socket.id}`);
 			});
 			socket.on('joinQueue', () => {
+				console.log(socket.id);
 				const username = scoutUsernames.get(socket.id);
 				if (!username) {
 					warn(`Undefined scout joined queue. ID: ${socket.id}`);
@@ -142,9 +143,12 @@ const webSocketServer = {
 				callback({ robots: robotQueue });
 			});
 			socket.on('getScoutQueue', async (callback) => {
-				const scouts = (await io.in('scoutQueue').fetchSockets()).map((scout) =>
-					scoutUsernames.get(scout.id)
-				);
+				const scouts = (await io.in('scoutQueue').fetchSockets()).map((scout) => {
+					console.log(scout.id);
+					return scoutUsernames.get(scout.id);
+				});
+				console.log(scoutUsernames);
+				scouts.map((s) => s ?? 'afymtayftmu').forEach(info);
 				callback({
 					scouts
 				});
