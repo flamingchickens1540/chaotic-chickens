@@ -3,14 +3,11 @@
 	import { goto } from '$app/navigation';
 	import { localStore } from '@/localStore.svelte';
 
+	import ToggleGroup from '@/components/ToggleGroup.svelte';
+
 	let teamKey = localStore('teamKey', '');
 	let matchKey = localStore('matchKey', '');
-	let color = localStore('color', '');
-	let disabled = $derived(
-		teamKey.value == '' || matchKey.value == '' || color.value == ''
-			? 'pointer-events-none opacity-30'
-			: ''
-	);
+	let color = localStore('color', 'red');
 </script>
 
 <div class="m-2 flex flex-col gap-2">
@@ -26,18 +23,11 @@
 		bind:value={matchKey.value}
 	></textarea>
 
-	<select
-		name="color"
-		bind:value={color.value}
-		class="col-span-2 block w-full rounded bg-gunmetal p-4"
-	>
-		<option selected value="">Select a color</option>
-		<option value="blue">Blue</option>
-		<option value="red">Red</option>
-	</select>
+	<ToggleGroup name="team-color" bind:selected={color.value} items={['red', 'blue']} />
 
 	<button
-		class="w-full rounded bg-gunmetal p-4 text-lg font-semibold {disabled}"
+		class="w-full rounded bg-gunmetal p-4 text-lg font-semibold disabled:opacity-30"
+		disabled={teamKey.value == '' || matchKey.value == '' || color.value == ''}
 		onclick={() => {
 			browser && localStorage.removeItem('matchData');
 			goto('/match-scout');
