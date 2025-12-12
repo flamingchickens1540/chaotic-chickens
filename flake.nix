@@ -40,9 +40,9 @@
               entry = "${lib.getExe pkgs.bun} run format";
             };
           };
-
         }
       );
+
       devShells = forAllSystems (
         { pkgs, system, ... }:
         {
@@ -89,6 +89,14 @@
             };
           pre-commit = pkgs.mkShell {
             inherit (self.checks.${system}.pre-commit) shellHook;
+            buildInputs = with pkgs; [
+              postgresql_17
+              bun
+              nodejs
+              nodePackages.prettier
+              prisma
+              openssl
+            ];
           };
         }
       );

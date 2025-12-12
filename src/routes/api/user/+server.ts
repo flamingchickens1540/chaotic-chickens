@@ -6,16 +6,15 @@ import { json, type RequestEvent, type RequestHandler } from '@sveltejs/kit';
 // Create account / Login
 export const POST: RequestHandler = async ({ request }: RequestEvent) => {
 	const { name }: { name: string } = await request.json();
-	const user = await prisma.user.findFirst({ where: { username: name } });
-	return json(user ?? (await prisma.user.create({ data: { username: name } })));
+	const user = await prisma.user.create({ data: { username: name } });
+	return json(user);
 };
 
-// find user
-export const GET: RequestHandler = async ({ request }: RequestEvent) => {
-	const { id }: { id: number } = await request.json();
-	return json(await prisma.user.findUnique({ where: { id } }));
+// Login
+export const GET: RequestHandler = async ({ request, params: { username } }: RequestEvent) => {
+	const user = await prisma.user.findFirst({ where: { username } });
+	return json(user ?? (await prisma.user.create({ data: { username } })));
 };
-
 // Update name, admin status
 export const PATCH: RequestHandler = async ({ request }: RequestEvent) => {
 	const { name, id }: { name: string | undefined; id: number } = await request.json();
