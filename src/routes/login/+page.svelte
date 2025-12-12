@@ -13,14 +13,26 @@
 	});
 
 	const login = async () => {
+		const loginRes = await fetch(`/api/user?username=${username.value}`, {
+			method: 'GET'
+		});
+		if (loginRes.ok) {
+			const { id } = await loginRes.json();
+			browser && window.localStorage.setItem('scout_id', id);
+
+			goto('/');
+			return;
+		}
+		console.log('no');
+
 		const res = await fetch('/api/user', {
 			method: 'POST',
 			body: JSON.stringify({ name: username.value })
 		});
-
 		if (!res.ok) return;
 
-		const id = await res.json();
+		const { id } = await res.json();
+		console.log(id);
 		browser && window.localStorage.setItem('scout_id', id);
 
 		goto('/');

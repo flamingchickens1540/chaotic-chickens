@@ -38,6 +38,7 @@ export class LocalStore<T> {
 	}
 
 	#deserialize(item: string): T {
+		console.log(item);
 		return JSON.parse(item);
 	}
 
