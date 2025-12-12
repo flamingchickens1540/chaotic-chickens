@@ -9,6 +9,7 @@
 
 	socket.on('connect', () => {
 		socket.emit('joinQueue');
+		console.log(socket.id);
 	});
 	socket.on('queueFull', () => {
 		queueFull = true;
@@ -26,7 +27,7 @@
 		}
 	);
 	socket.on('scoutLeftQueue', (scout: string) => {
-		if (scout === username.value) {
+		if (scout == username.value) {
 			goto('/');
 		}
 	});

@@ -17,7 +17,7 @@
 	let scoutQueue: string[] = $state([]);
 	let matchKey: string = $state('qm1');
 	const username = localStore('username', 'admin');
-	const socket: Socket = io({ auth: { username: username.value, token: 'admin' } });
+	const socket: Socket = io({ auth: { username: 'Admin ' + username.value, token: 'admin' } });
 
 	socket.on('connect', () => {
 		socket.emit('getScoutQueue', ({ scouts }: { scouts: string[] }) => {
@@ -27,18 +27,22 @@
 		socket.emit('getRobotQueue', ({ robots }: { robots: Robot[] }) => {});
 	});
 	socket.on('scoutQueued', (username) => {
-		console.log('hi');
 		scoutQueue.push(username);
 	});
 	socket.on('robotLeftQueue', ({ nextRobot, scout }: { nextRobot: Robot; scout: string }) => {
 		//
 	});
-
+	socket.on('scoutLeftQueue', (username: string) => {
+		scoutQueue.splice(
+			scoutQueue.findIndex((scout) => scout == username),
+			1
+		);
+	});
 	let nextMatch: Match = $state(emptyMatch());
 	let curMatch: Match = $state(emptyMatch());
 
 	const removeScout = (i: number) => {
-		socket.emit('scoutLeftQueue', scoutQueue.splice(i, 1));
+		socket.emit('leaveScoutQueue', scoutQueue.splice(i, 1));
 	};
 
 	const loadFromBaq = async () => {

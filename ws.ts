@@ -38,16 +38,18 @@ const webSocketServer = {
 			next();
 		});
 		io.on('connect', (socket) => {
-			if (socket.handshake.auth.token == 'Admin') {
+			// this seems needed
+			scoutUsernames.set(socket.id, socket.handshake.auth.username);
+			if (socket.handshake.auth.token == 'admin') {
 				socket.join('admin');
-				info(`Admin aquired: ${socket.handshake.auth.token}`);
+
+				info(`Admin aquired: ${socket.handshake.auth.username}`);
 			}
 			socket.on('newUser', (user: string) => {
 				scoutUsernames.set(socket.id, user);
 				info(`New user ${user} on socket ${socket.id}`);
 			});
 			socket.on('joinQueue', () => {
-				console.log(socket.id);
 				const username = scoutUsernames.get(socket.id);
 				if (!username) {
 					warn(`Undefined scout joined queue. ID: ${socket.id}`);
@@ -61,8 +63,9 @@ const webSocketServer = {
 					if (!matchSubmitted) {
 						socket.emit('queueFull');
 					}
-					info(`${username} joined queue`);
+					info(`${username} joined queue: ${socket.id}`);
 					socket.join('scoutQueue');
+
 					return;
 				}
 				io.to('admin').emit('robotLeftQueue', {
@@ -143,12 +146,11 @@ const webSocketServer = {
 				callback({ robots: robotQueue });
 			});
 			socket.on('getScoutQueue', async (callback) => {
+				io.in('scoutQueue').emit('scoutQueued', 'Not real');
 				const scouts = (await io.in('scoutQueue').fetchSockets()).map((scout) => {
 					console.log(scout.id);
 					return scoutUsernames.get(scout.id);
 				});
-				console.log(scoutUsernames);
-				scouts.map((s) => s ?? 'afymtayftmu').forEach(info);
 				callback({
 					scouts
 				});
@@ -159,6 +161,7 @@ const webSocketServer = {
 			});
 			socket.on('disconnect', async (_reason) => {
 				const scoutId = scoutUsernames.get(socket.id);
+				io.to('admin').emit('scoutLeftQueue');
 				if (!scoutId) return;
 				scoutUsernames.delete(socket.id);
 				leaveScoutQueue(scoutId);
