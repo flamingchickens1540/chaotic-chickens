@@ -29,7 +29,7 @@
 	}
 </script>
 
-<div class="flex flex-col gap-4 overflow-y-scroll">
+<div class="flex flex-col gap-4">
 	<div class="flex flex-col gap-2">
 		<h2 class="text-center text-2xl font-bold">Moved During Auto?</h2>
 		<ToggleGroup
