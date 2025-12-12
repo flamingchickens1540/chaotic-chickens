@@ -7,8 +7,9 @@
 	import favicon from '$lib/assets/favicon.png';
 
 	if (browser) {
-		const oldData = localStorage.getItem('scoutId');
+		const oldData = localStorage.getItem('scout_id');
 		if (oldData != null) {
+			console.log(oldData);
 			localStorage.clear();
 		}
 		const username = $state(localStore('username', ''));
