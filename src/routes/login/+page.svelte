@@ -13,7 +13,7 @@
 	});
 
 	const login = async () => {
-		const loginRes = await fetch(`/api/user?username=${username.value}`, {
+		const loginRes = await fetch(`/api/user/${username.value}`, {
 			method: 'GET'
 		});
 		if (!loginRes.ok) return;
