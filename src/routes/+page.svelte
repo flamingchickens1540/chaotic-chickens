@@ -1,7 +1,5 @@
 <script lang="ts">
-	import type { PageProps } from './$types';
 	import { goto } from '$app/navigation';
-	import { browser } from '$app/environment';
 	import { localStore } from '@/localStore.svelte';
 	import { LogOut } from 'lucide-svelte';
 

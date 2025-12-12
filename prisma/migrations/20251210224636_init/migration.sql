@@ -5,7 +5,7 @@ CREATE TYPE "AutoStart" AS ENUM ('Far', 'Close', 'Mid');
 CREATE TYPE "Drivetrain" AS ENUM ('Swerve', 'Tank', 'Other');
 
 -- CreateEnum
-CREATE TYPE "Action" AS ENUM ('ScoreGrass', 'ScoreFeedingStation', 'ScoreRobot');
+CREATE TYPE "Action" AS ENUM ('ScoreGrass', 'ScoreFeedingStation', 'ScoreRobot', 'ScoreBunny');
 
 -- CreateTable
 CREATE TABLE "Team" (
@@ -15,6 +15,7 @@ CREATE TABLE "Team" (
     "scoreRobot" BOOLEAN,
     "scoreGrass" BOOLEAN,
     "scoreFeedingStation" BOOLEAN,
+    "scoreBunny" BOOLEAN,
     "scoreCabbage" BOOLEAN,
     "drivetrain" "Drivetrain"
 );

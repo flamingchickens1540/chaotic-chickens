@@ -14,10 +14,10 @@
 		mostRecentAction: 'Auto' | 'Tele' | null;
 	} = $props();
 
-	const remove_auto = (index: number) => {
+	const removeAuto = (index: number) => {
 		timeline.auto.splice(index, 1);
 	};
-	const remove_tele = (index: number) => {
+	const removeTele = (index: number) => {
 		timeline.tele.splice(index, 1);
 	};
 
@@ -34,26 +34,26 @@
 		timeline.tele.unshift(lastAuto as any);
 	};
 
-	let auto_len = $derived(timeline.auto.length);
-	let tele_len = $derived(timeline.tele.length);
+	let autoLen = $derived(timeline.auto.length);
+	let teleLen = $derived(timeline.tele.length);
 </script>
 
 <Drawer bind:displaying>
 	{#each timeline.tele as action, i}
-		<TimelineAction phase="Tele" {action} remove={() => remove_tele(i)} />
+		<TimelineAction phase="Tele" {action} remove={() => removeTele(i)} />
 	{/each}
-	{#if auto_len + tele_len > 0}
+	{#if autoLen + teleLen > 0}
 		<div class="flex w-full items-center gap-8 rounded bg-gunmetal p-2">
-			<button class="disabled:opacity-30" disabled={tele_len === 0} onclick={moveUp}
+			<button class="disabled:opacity-30" disabled={teleLen === 0} onclick={moveUp}
 				><MoveUp /></button
 			>
 			<hr class="h-1 grow" />
-			<button class="disabled:opacity-30" disabled={auto_len === 0} onclick={moveDown}
+			<button class="disabled:opacity-30" disabled={autoLen === 0} onclick={moveDown}
 				><MoveDown /></button
 			>
 		</div>
 	{/if}
 	{#each timeline.auto as action, i}
-		<TimelineAction phase="Auto" {action} remove={() => remove_auto(i)} />
+		<TimelineAction phase="Auto" {action} remove={() => removeAuto(i)} />
 	{/each}
 </Drawer>
