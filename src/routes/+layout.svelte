@@ -7,10 +7,14 @@
 	import favicon from '$lib/assets/favicon.png';
 
 	if (browser) {
+                const oldData = localStorage.getItem('scoutId');
+        if (oldData != null) {
+            localStorage.clear();
+        }
 		const username = $state(localStore('username', ''));
-		const scout_id = $state(localStore('scout_id', -1));
+		const scoutId = $state(localStore('scoutId', -1));
 
-		if (username.value == '' || scout_id.value == -1) goto('/login');
+		if (username.value == '' || scoutId.value == -1) goto('/login');
 	}
 
 	let { children } = $props();

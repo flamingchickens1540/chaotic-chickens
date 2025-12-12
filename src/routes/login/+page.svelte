@@ -5,11 +5,11 @@
 	import { browser } from '$app/environment';
 
 	let username = $state(localStore('username', ''));
-	let scout_id = localStore('scout_id', -1);
+	let scoutId = localStore('scoutId', -1);
 	let waiting = $state(false);
 
 	onMount(() => {
-		if (username.value != '' && scout_id.value != -1) goto('/');
+		if (username.value != '' && scoutId.value != -1) goto('/');
 	});
 
 	const login = async () => {
@@ -19,7 +19,7 @@
 		if (!loginRes.ok) return;
 
 		const { id } = await loginRes.json();
-		browser && window.localStorage.setItem('scout_id', id);
+		browser && window.localStorage.setItem('scoutId', id);
 
 		goto('/');
 	};

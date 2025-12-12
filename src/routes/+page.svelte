@@ -4,11 +4,11 @@
 	import { LogOut } from 'lucide-svelte';
 
 	let username = $state(localStore('username', ''));
-	let scout_id = $state(localStore('scout_id', -1));
+	let scoutId = $state(localStore('scoutId', -1));
 
 	const logout = () => {
 		username.reset();
-		scout_id.reset();
+		scoutId.reset();
 		goto('/login');
 	};
 </script>
