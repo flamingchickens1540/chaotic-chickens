@@ -9,7 +9,6 @@
 
 	socket.on('connect', () => {
 		socket.emit('joinQueue');
-		console.log(socket.id);
 	});
 	socket.on('queueFull', () => {
 		queueFull = true;

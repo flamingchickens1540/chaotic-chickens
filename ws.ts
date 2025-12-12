@@ -65,7 +65,6 @@ const webSocketServer = {
 					}
 					info(`${username} joined queue: ${socket.id}`);
 					socket.join('scoutQueue');
-
 					return;
 				}
 				io.to('admin').emit('robotLeftQueue', {
