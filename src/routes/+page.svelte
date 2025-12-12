@@ -14,7 +14,7 @@
 </script>
 
 <div class="flex flex-col gap-4 p-4">
-	<div class="grid grid-rows-3 gap-2">
+	<div class="grid grid-cols-[1fr_auto_1fr] gap-2">
 		<button onclick={logout}><LogOut /></button>
 		<span>Hello {username.value}</span>
 	</div>
