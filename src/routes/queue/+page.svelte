@@ -13,6 +13,9 @@
 	socket.on('queueFull', () => {
 		queueFull = true;
 	});
+	socket.on('currentlyScouting', () => {
+		goto('/match-scout');
+	});
 	socket.on(
 		'recieveRobot',
 		([matchKey, { teamKey, color }]: [string, { teamKey: string; color: 'red' | 'blue' }]) => {

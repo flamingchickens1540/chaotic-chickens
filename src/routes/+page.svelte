@@ -2,9 +2,14 @@
 	import { goto } from '$app/navigation';
 	import { localStore } from '@/localStore.svelte';
 	import { LogOut } from 'lucide-svelte';
+	import { io } from 'socket.io-client';
 
 	let username = $state(localStore('username', ''));
 	let scoutId = $state(localStore('scoutId', -1));
+	const socket = io({ auth: { username } });
+	socket.on('connect', () => {
+		socket.emit('wentHome');
+	});
 
 	const logout = () => {
 		username.reset();
