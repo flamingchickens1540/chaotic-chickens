@@ -85,14 +85,14 @@ const webSocketServer = {
 					.filter(([_id, user]) => user == scoutId)
 					.map(([id, _user]) => id)[0];
 				io.emit('scoutLeftQueue', scoutId);
-				const socket = (await io.in('scoutQueue').fetchSockets()).find(
+				const scout = (await io.in('scoutQueue').fetchSockets()).find(
 					(socket) => socket.id == socketId
 				);
-				if (!socket) {
-					warn(`Scout not in queue left queue: ${scoutId}`);
+				if (!scout) {
+					warn(`Scout not in queue left queue: ${JSON.stringify(scoutId)}`);
 					return;
 				}
-				socket.leave('scoutQueue');
+				scout.leave('scoutQueue');
 
 				const scoutQueue = (await io.in('scoutQueue').fetchSockets()).map((socket) => socket.id);
 				if (scoutQueue.length === 0) {
@@ -116,8 +116,9 @@ const webSocketServer = {
 			socket.on(
 				'sendMatch',
 				async ([nextMatchKey, teams]: [string, { teamKey: string; color: 'red' | 'blue' }[]]) => {
-					// info('new match');
-					// if (!socket.rooms.has('admin')) return;
+					info('new match');
+					if (!socket.rooms.has('admin')) return;
+                    scouting = [];
 					const teamsPrint: string = formatTeams(teams);
 					info(`New Match (${nextMatchKey}):${teamsPrint}`);
 					robotQueue = [];
@@ -144,6 +145,10 @@ const webSocketServer = {
 					matchKey = nextMatchKey;
 				}
 			);
+            socket.on('clearScoutQueue', async () => {
+                (await io.in('scoutQueue').fetchSockets()).forEach((socket) => {socket.emit('thisScoutLeftQueue'); socket.leave('scoutQueue');})
+                io.to('admin').emit('scoutQueueCleared');
+            })
 			socket.on('clearRobotQueue', () => {
 				const teamsPrint: string = formatTeams(robotQueue);
 
@@ -188,6 +193,10 @@ const webSocketServer = {
 			socket.on('disconnect', async (_reason) => {
 				const scoutId = scoutUsernames.get(socket.id);
 				if (!scoutId) return;
+                const idx = scouting.findIndex((scout) => scout == scoutId);
+                if (idx != -1) {
+                    scouting.splice(idx, 1);
+                }
 				io.to('admin').emit('scoutLeftQueue', scoutId);
 				scoutUsernames.delete(socket.id);
 				leaveScoutQueue(scoutId);

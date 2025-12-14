@@ -10,7 +10,7 @@
 		red: Alliance;
 		blue: Alliance;
 	};
-	const BAQ_URL = 'http://queue.team1540.org/';
+	const BAQ_URL = 'http://queue.team1540.org';
 	const emptyMatch: () => Match = () => [
 		{ teamKey: '', color: 'red' },
 		{ teamKey: '', color: 'red' },
@@ -47,13 +47,18 @@
 	let curMatch: Match = $state(emptyMatch());
 
 	const removeScout = (i: number) => {
-		socket.emit('leaveScoutQueue', scoutQueue.splice(i, 1));
+		socket.emit('leaveScoutQueue', scoutQueue.splice(i, 1)[0]);
 	};
+    const clearScouts = () => {
+        socket.emit('clearScoutQueue');
+        scoutQueue = [];
+    }
+    socket.on("scoutQueueCleared", ()=> {scoutQueue = [];})
 
 	const loadFromBaq = async () => {
 		try {
 			// NOTE: this api call CREATES A NEW MATCH so check that it isn't doing that later
-			const res = await fetch(`${BAQ_URL}/api/get_match`, {
+			const res = await fetch(`/api/baq`, {
 				method: 'GET'
 			});
 			if (!res.ok) {
@@ -73,6 +78,10 @@
 			console.log('BAQ request failed');
 		}
 	};
+    const clearRobots = () => {
+        socket.emit('clearRobotQueue');
+        curMatch = emptyMatch();
+    }
 	const queueMatch = () => {
 		if (nextMatch.filter((robot) => robot.teamKey == '').length == 0) {
 			console.log('Queuing next match!');
@@ -141,5 +150,6 @@
 			>Load from BAQ</button
 		>
 		<button class="mb-2 w-full rounded bg-eerie-black p-2" onclick={queueMatch}>Queue match</button>
+		<button class="mb-2 w-full rounded bg-eerie-black p-2" onclick={clearScouts}>Clear Scout Queue</button>
 	</div>
 </div>
